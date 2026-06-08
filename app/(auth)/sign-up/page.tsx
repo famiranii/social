@@ -38,7 +38,7 @@ export default function page() {
   };
 
   return (
-    <div className="w-130 bg-amber-50/15 h-143 rounded-3xl flex flex-col items-center p-8 py-12 border-white/40 border-2">
+    <div className="w-80 md:w-130 bg-amber-50/15 h-143 rounded-3xl flex flex-col items-center p-4 py-8 md:p-8 md:py-12 border-white/40 border-2  backdrop-blur-md">
       <Header />
       <SignupForm />
       <Footer navigateTo={"login"} />

@@ -18,14 +18,12 @@ export default function layout({
   return (
     <div>
       <div className="flex items-center h-screen justify-evenly">
-        <div>
+        <div className="absolute md:relative -z-10">
           <Image
             src="/images/Group 8.png"
             alt="logins"
-            width={0}
-            height={0}
-            sizes="80vw"
-            style={{ width: "auto", height: "auto" }}
+            width={600}
+            height={600}
           />
         </div>
           {children}
