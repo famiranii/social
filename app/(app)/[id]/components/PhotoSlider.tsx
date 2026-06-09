@@ -18,8 +18,22 @@ export default function PhotoSlider() {
 
   const [index, setIndex] = useState(0);
   const [thumbStart, setThumbStart] = useState(0);
+  const getVisibleCount = () => {
+    if (typeof window === "undefined") return 5;
+    return window.innerWidth < 768 ? 3 : 5;
+  };
 
-  const VISIBLE = 5;
+  const [visibleCount, setVisibleCount] = useState(5);
+
+  useEffect(() => {
+    const update = () => setVisibleCount(getVisibleCount());
+
+    update();
+    window.addEventListener("resize", update);
+
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  const VISIBLE = getVisibleCount();
 
   const nextThumbs = () => {
     setThumbStart((prev) => Math.min(prev + VISIBLE, images.length - VISIBLE));
@@ -53,7 +67,7 @@ export default function PhotoSlider() {
       onClick={close}
       className="fixed inset-0 bg-gray-600/50 backdrop-blur-md flex justify-center items-center z-50"
     >
-      <div onClick={(e) => e.stopPropagation()} className="w-180">
+      <div onClick={(e) => e.stopPropagation()} className="w-80 md:w-180">
         {/* BACK BUTTON */}
         <button
           className="absolute left-10 top-10 border rounded-full p-2 hover:border-gray-400 hover:text-gray-400"
@@ -62,12 +76,10 @@ export default function PhotoSlider() {
           <BackwardIcon />
         </button>
 
-        {/* MAIN IMAGE */}
         <div className="relative w-full h-90 rounded-2xl overflow-hidden bg-black">
           <Image src={images[index]} alt="main" fill className="object-cover" />
         </div>
 
-        {/* THUMBNAILS */}
         <div className="mt-4 flex items-center justify-between">
           <button
             onClick={prevThumbs}
@@ -84,7 +96,7 @@ export default function PhotoSlider() {
                 <div
                   key={realIndex}
                   onClick={() => setIndex(realIndex)}
-                  className={`relative w-30 h-20 cursor-pointer rounded-md overflow-hidden border-2 ${
+                  className={`relative w-15 h-15 md:w-30 md:h-20 cursor-pointer rounded-md overflow-hidden border-2 ${
                     realIndex === index ? "border-white" : "border-transparent"
                   }`}
                 >

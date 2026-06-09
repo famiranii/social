@@ -10,7 +10,7 @@ export default function ImageCard() {
     dispatch(openModal("photo-slider"));
   };
   return (
-    <div className="cursor-pointer" onClick={imageClicked}>
+    <div className="cursor-pointer w-30 md:w-50" onClick={imageClicked}>
       <Image
         src="/images/random-image.jpg"
         width={200}

@@ -7,7 +7,7 @@ export default function BiggerPersonalCard() {
   return (
     <div
       className="flex flex-col items-center gap-2
-    w-100 h-140 rounded-2xl bg-amber-50
+    w-80 md:w-100 h-140 rounded-2xl bg-amber-50
     shadow-[5px_5px_10px_rgba(0,0,0,0.5)]
   "
     >
