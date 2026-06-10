@@ -8,6 +8,8 @@ import PasswordIcon from "@/public/icons/PasswordIcon";
 import UserIcon from "@/public/icons/UserIcon";
 import { loginUser } from "@/app/components/lib/api";
 import { loginSchema } from "@/app/components/schemas";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type FormData = {
   email: string;
@@ -15,6 +17,7 @@ type FormData = {
 };
 
 export default function LoginForm() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -27,10 +30,11 @@ export default function LoginForm() {
     try {
       const res = await loginUser(data);
       console.log("LOGIN SUCCESS:", res);
-      alert("Login successful!");
+      toast.success("Your login was successful");
+      router.push("/");
     } catch (err) {
       console.error(err);
-      alert("Login failed!");
+      toast.error("there is a problem with fetching data");
     }
   };
 
