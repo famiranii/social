@@ -6,10 +6,12 @@ import LoginBtn from "@/app/components/btns/LoginBtn";
 import LoginInput from "@/app/components/iputs/LoginInput";
 import PasswordIcon from "@/public/icons/PasswordIcon";
 import UserIcon from "@/public/icons/UserIcon";
-import { loginUser } from "@/app/components/lib/api";
 import { loginSchema } from "@/app/components/schemas";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
+import { loginApi } from "@/store/featurs/authSlice";
+import { useEffect } from "react";
 
 type FormData = {
   email: string;
@@ -18,6 +20,8 @@ type FormData = {
 
 export default function LoginForm() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const authInfo = useAppSelector((state) => state.auth);
   const {
     register,
     handleSubmit,
@@ -27,16 +31,19 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: FormData) => {
-    try {
-      const res = await loginUser(data);
-      console.log("LOGIN SUCCESS:", res);
-      toast.success("Your login was successful");
-      router.push("/");
-    } catch (err) {
-      console.error(err);
-      toast.error("there is a problem with fetching data");
-    }
+    await dispatch(loginApi(data));
   };
+
+  useEffect(() => {
+    if (authInfo.status === "success") {
+      toast.success("Login successful");
+      router.push("/");
+    }
+
+    if (authInfo.status === "failed") {
+      toast.error(authInfo.error || "Login failed");
+    }
+  }, [authInfo.status, authInfo.error]);
 
   return (
     <form

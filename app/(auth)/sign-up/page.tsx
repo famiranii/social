@@ -1,15 +1,9 @@
 "use client";
-import LoginBtn from "@/app/components/btns/LoginBtn";
-import LoginInput from "@/app/components/iputs/LoginInput";
 import Footer from "@/app/(auth)/components/Footer";
 import Header from "@/app/(auth)/components/Header";
-import EmailIcon from "@/public/icons/EmailIcon";
-import PasswordIcon from "@/public/icons/PasswordIcon";
-import UserIcon from "@/public/icons/UserIcon";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupSchema } from "@/app/components/schemas";
-import { loginUser } from "@/app/components/lib/api";
 import SignupForm from "../components/SignupFrom";
 
 type FormData = {

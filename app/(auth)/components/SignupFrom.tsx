@@ -7,7 +7,11 @@ import UserIcon from "@/public/icons/UserIcon";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupSchema } from "@/app/components/schemas";
-import { loginUser } from "@/app/components/lib/api";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
+import { signupApi } from "@/store/featurs/authSlice";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type FormData = {
   email: string;
@@ -16,6 +20,9 @@ type FormData = {
 };
 
 export default function SignupForm() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const authInfo = useAppSelector((state) => state.auth);
   const {
     register,
     handleSubmit,
@@ -24,15 +31,18 @@ export default function SignupForm() {
     resolver: zodResolver(SignupSchema),
   });
   const onSubmit = async (data: FormData) => {
-    try {
-      const res = await loginUser(data);
-      console.log("LOGIN SUCCESS:", res);
-      alert("Login successful!");
-    } catch (err) {
-      console.error(err);
-      alert("Login failed!");
-    }
+    await dispatch(signupApi(data));
   };
+  useEffect(() => {
+    if (authInfo.status === "success") {
+      toast.success("Login successful");
+      router.push("/");
+    }
+
+    if (authInfo.status === "failed") {
+      toast.error(authInfo.error || "Login failed");
+    }
+  }, [authInfo.status, authInfo.error]);
 
   return (
     <form

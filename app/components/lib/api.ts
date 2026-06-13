@@ -1,37 +1,49 @@
-import axios from "axios";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const getToken = () => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("token");
+};
 
-export async function getUsers() {
-  try {
-    const { data } = await axios.get("https://fakestoreapi.com/products");
-    return data;
-  } catch (error: any) {
-    console.error("Failed to fetch products:", error.message || error);
+async function request<T>(
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const token = getToken();
 
-    // You can either return fallback OR throw
-    throw new Error("Unable to fetch products. Please try again later.");
-  }
-}
-
-export async function loginUser(data: any) {
-  const res = await axios.post("/api/login", data);
-  return res.data;
-}
-
-export async function getPosts() {
-  const res = await fetch(`${API_URL}/posts`);
-  return res.json();
-}
-
-export async function createPost(data: any) {
-  const res = await fetch(`${API_URL}/posts`, {
-    method: "POST",
+  const res = await fetch(`${baseUrl}${endpoint}`, {
+    ...options,
     headers: {
-      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options.body instanceof FormData
+        ? {}
+        : { "Content-Type": "application/json" }),
+      ...options.headers,
     },
-    body: JSON.stringify(data),
   });
 
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.message || "Request failed");
+  }
+
   return res.json();
 }
+
+export const api = {
+  get: <T>(url: string) => request<T>(url, { method: "GET" }),
+
+  post: <T>(url: string, data?: any) =>
+    request<T>(url, {
+      method: "POST",
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    }),
+
+  put: <T>(url: string, data?: any) =>
+    request<T>(url, {
+      method: "PUT",
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    }),
+
+  delete: <T>(url: string) => request<T>(url, { method: "DELETE" }),
+};
