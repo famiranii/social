@@ -1,12 +1,31 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { api } from "../lib/api";
+
+type Country = {
+  id: number;
+  name: string;
+};
 
 export default function DropDown({ options }: { options: string[] }) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState("Iran");
 
+  useEffect(() => {
+    const getCountries = async () => {
+      try {
+        const res = await fetch("/countries");
+        const data = await res.json();
+        console.log(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getCountries();
+  }, []);
   return (
     <div className="relative w-48">
       <button

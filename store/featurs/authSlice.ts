@@ -4,7 +4,7 @@ import { api } from "../../app/components/lib/api";
 
 interface AuthState {
   token: string;
-  status: "idle" | "loading" | "success" | "failed";
+  status: "idle" | "loading" | "success" | "failed" | "notMatch";
   error: string | null;
 }
 
@@ -16,9 +16,13 @@ const initialState: AuthState = {
 
 export const loginApi = createAsyncThunk(
   "auth/login",
-  async (payload: { email: string; password: string }, thunkAPI) => {
+  async (payload: { username: string; password: string }, thunkAPI) => {
     try {
-      const data = await api.post<{ token: string }>("/login", payload);
+      const data = await api.post<{
+        token: string;
+        error: boolean;
+        message: string;
+      }>("login", payload);
 
       return data;
     } catch (err: any) {
@@ -30,7 +34,7 @@ export const signupApi = createAsyncThunk(
   "auth/signup",
   async (payload: { email: string; password: string }, thunkAPI) => {
     try {
-      const data = await api.post<{ token: string }>("/sign-up", payload);
+      const data = await api.post<{ token: string }>("register", payload);
 
       return data;
     } catch (err: any) {
@@ -76,8 +80,17 @@ const authSlice = createSlice({
       })
 
       .addCase(loginApi.fulfilled, (state, action) => {
+        if (action.payload.error && action.payload.message === "notMatch") {          
+          state.status = action.payload.message;
+          return;
+        }
+        if (action.payload.error) {
+          state.status === action.payload.message;
+          return;
+        }
         state.status = "success";
         state.token = action.payload.token;
+        console.log(action.payload);
 
         if (typeof window !== "undefined") {
           localStorage.setItem("token", action.payload.token);

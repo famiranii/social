@@ -14,7 +14,7 @@ import { loginApi } from "@/store/featurs/authSlice";
 import { useEffect } from "react";
 
 type FormData = {
-  email: string;
+  username: string;
   password: string;
 };
 
@@ -43,6 +43,11 @@ export default function LoginForm() {
     if (authInfo.status === "failed") {
       toast.error(authInfo.error || "Login failed");
     }
+    if (authInfo.status === "notMatch") {
+      toast.error(authInfo.error || "Username Or Password Is Wrong");
+      console.log("f");
+      
+    }
   }, [authInfo.status, authInfo.error]);
 
   return (
@@ -54,8 +59,8 @@ export default function LoginForm() {
         <LoginInput
           title="Email Or Username"
           Icon={UserIcon}
-          {...register("email")}
-          error={errors.email?.message}
+          {...register("username")}
+          error={errors.username?.message}
         />
 
         <LoginInput

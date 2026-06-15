@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import HomeHeader from "../components/Home/HomeHeader";
 import GetLocation from "../components/GetLocation";
+import ProtectedRoute from "./middleware";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <div className="min-h-full flex flex-col">
-      <HomeHeader />
-      <GetLocation />
-      <main className="flex-1 overflow-hidden pt-18">{children}</main>
+      <ProtectedRoute>
+        <HomeHeader />
+        <GetLocation />
+        <main className="flex-1 overflow-hidden pt-18">{children}</main>
+      </ProtectedRoute>
     </div>
   );
 }
