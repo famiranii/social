@@ -1,3 +1,4 @@
+import ChatIconBtn from "@/app/components/btns/ChatIconBtn";
 import ChatIcon from "@/public/icons/ChatIcon";
 import RedHeartIcon from "@/public/icons/RedHeartIcon";
 import StarIcon from "@/public/icons/StarIcon";
@@ -21,7 +22,7 @@ export default function BiggerPersonalCard() {
       </div>
       <div className="w-28 bg-gray-700 rounded-3xl flex items-center justify-around">
         <RedHeartIcon />
-        <ChatIcon />
+        <ChatIconBtn />
         <StarIcon />
       </div>
       <div>
@@ -32,19 +33,18 @@ export default function BiggerPersonalCard() {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua Egestas
           purus viverra accumsan in nisl nisi Arcu cursus vitae congue mauris
-          rhoncus aenean vel elit scelerisque
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua Egestas
-          purus viverra accumsan in nisl nisi Arcu cursus vitae congue mauris
-          rhoncus aenean vel elit scelerisque
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua Egestas
-          purus viverra accumsan in nisl nisi Arcu cursus vitae congue mauris
-          rhoncus aenean vel elit scelerisque
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua Egestas
-          purus viverra accumsan in nisl nisi Arcu cursus vitae congue mauris
-          rhoncus aenean vel elit scelerisque
+          rhoncus aenean vel elit scelerisque Lorem ipsum dolor sit amet,
+          consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+          labore et dolore magna aliqua Egestas purus viverra accumsan in nisl
+          nisi Arcu cursus vitae congue mauris rhoncus aenean vel elit
+          scelerisque Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+          Egestas purus viverra accumsan in nisl nisi Arcu cursus vitae congue
+          mauris rhoncus aenean vel elit scelerisque Lorem ipsum dolor sit amet,
+          consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+          labore et dolore magna aliqua Egestas purus viverra accumsan in nisl
+          nisi Arcu cursus vitae congue mauris rhoncus aenean vel elit
+          scelerisque
         </p>
       </div>
     </div>

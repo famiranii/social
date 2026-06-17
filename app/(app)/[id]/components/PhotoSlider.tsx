@@ -73,7 +73,7 @@ export default function PhotoSlider() {
           className="absolute left-10 top-10 border rounded-full p-2 hover:border-gray-400 hover:text-gray-400"
           onClick={close}
         >
-          <BackwardIcon />
+          <BackwardIcon prop={{width:60}}/>
         </button>
 
         <div className="relative w-full h-90 rounded-2xl overflow-hidden bg-black">

@@ -1,48 +1,75 @@
 "use client";
-import ChatIcon from "@/public/icons/ChatIcon";
+
 import RedHeartIcon from "@/public/icons/RedHeartIcon";
 import StarIcon from "@/public/icons/StarIcon";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ChatIconBtn from "../btns/ChatIconBtn";
+import { User } from "@/types/user";
+import { div } from "framer-motion/client";
 
-export default function PersonalCard() {
-  const id = "Fakeid";
+export default function PersonalCard({ user }: { user: User }) {
   const router = useRouter();
+
   const PersonalCardClicked = () => {
-    router.push("/" + id);
+    router.push("/" + user.username);
   };
+  const bio =
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaquerecusandae dolores ea nostrum, ratione voluptates perferendisprovident optio laudantium eius perspiciatis magni et voluptateeligendi? Inventore aspernatur numquam illo deleniti!";
+  const trimmed = bio.slice(0, 120) + "...";
+
   return (
-    <div
-      className="flex flex-col items-center gap-2
-    w-72 h-90 rounded-2xl bg-amber-50
-    shadow-[5px_5px_10px_rgba(0,0,0,0.5)]
-    cursor-pointer
-  "
-      onClick={PersonalCardClicked}
-    >
-      <div className="relative w-full h-40 rounded-t-2xl overflow-hidden">
+    <div className="p-1 bg-amber-50 rounded-2xl">
+      <div
+        onClick={PersonalCardClicked}
+        className="
+        group relative w-88 h-130
+        rounded-2xl overflow-hidden
+        shadow-lg cursor-pointer
+        bg-black
+      "
+      >
+        {/* IMAGE */}
         <Image
           src="/images/random-image.jpg"
           alt="card"
           fill
-          className="object-fill"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
-      </div>
-      <div className="w-28 bg-gray-700 rounded-3xl flex items-center justify-around">
-        <RedHeartIcon />
-        <ChatIcon />
-        <StarIcon />
-      </div>
-      <div>
-        <p className="text-black font-bold text-2xl">Jakob Tamson</p>
-      </div>
-      <div className="px-4">
-        <p className="text-black text-xs text-center">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua Egestas
-          purus viverra accumsan in nisl nisi Arcu cursus vitae congue mauris
-          rhoncus aenean vel elit scelerisque
-        </p>
+
+        {/* DARK OVERLAY (always subtle, stronger on hover) */}
+        <div className="absolute inset-0  from-black/70 via-black/20 to-transparent" />
+
+        {/* ICONS (always visible) */}
+        <div className="absolute top-2 flex items-center justify-center w-full ">
+          <div className="gap-2 bg-gray-200/30 flex items-center rounded-full p-0.5">
+            <RedHeartIcon />
+            <ChatIconBtn />
+            <StarIcon />
+          </div>
+        </div>
+
+        {/* INFO PANEL (hidden until hover) */}
+        <div
+          className="
+          absolute bottom-0 left-0 right-0
+          p-4 text-white
+          transform translate-y-10 opacity-0
+          group-hover:translate-y-0 group-hover:opacity-100
+          transition-all duration-300
+          bg-gray-900/40
+        "
+        >
+          <p className="text-xl font-bold">
+            {user.first_name} {user.last_name}
+          </p>
+
+          <p className="text-sm text-white/80 mt-1">
+            {user.job} • {user.country} • {user.age}
+          </p>
+
+          <p className="text-xs text-white/70 mt-2 line-clamp-3">{trimmed}</p>
+        </div>
       </div>
     </div>
   );

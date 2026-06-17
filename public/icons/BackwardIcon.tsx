@@ -2,7 +2,6 @@
 export default function BackwardIcon({prop}:any) {
   return (
     <svg
-      className="h-10 w-10"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"

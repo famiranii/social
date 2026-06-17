@@ -1,42 +1,22 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { EllipsisVertical } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { api } from "../lib/api";
 
-type Country = {
-  id: number;
-  name: string;
-};
-
-export default function DropDown({ options }: { options: string[] }) {
+export default function EllipsisDropdown({ options }: { options: string[] }) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState("Iran");
 
-  useEffect(() => {
-    const getCountries = async () => {
-      try {
-        const res = await fetch("/countries");
-        const data = await res.json();
-        console.log(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getCountries();
-  }, []);
   return (
     <div className="relative w-48">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-2 bg-white rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition-all"
-      >
-        <span className="text-slate-700 font-medium">{selected}</span>
-        <ChevronDown
-          className={`w-5 h-5 text-slate-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
-      </button>
+      <div className="w-full flex justify-end">
+        <button
+          onClick={() => setOpen(!open)}
+          className="text-black rounded-4xl p-2 hover:bg-gray-300"
+        >
+          <EllipsisVertical className="w-8 h-8" />
+        </button>
+      </div>
 
       <AnimatePresence>
         {open && (
