@@ -4,7 +4,17 @@ import { api } from "../../app/components/lib/api";
 
 interface AuthState {
   token: string;
-  status: "idle" | "loading" | "success" | "failed" | "notMatch";
+  status:
+    | "idle"
+    | "loading"
+    | "success"
+    | "failed"
+    | "notMatch"
+    | "successSignUP"
+    | "invalid email"
+    | "invalid username"
+    | "Something went wrong"
+    | "re password not match";
   error: string | null;
 }
 
@@ -34,7 +44,11 @@ export const signupApi = createAsyncThunk(
   "auth/signup",
   async (payload: { email: string; password: string }, thunkAPI) => {
     try {
-      const data = await api.post<{ token: string }>("register", payload);
+      const data = await api.post<{
+        token: string;
+        message: string;
+        error: boolean;
+      }>("register", payload);
 
       return data;
     } catch (err: any) {
@@ -80,7 +94,7 @@ const authSlice = createSlice({
       })
 
       .addCase(loginApi.fulfilled, (state, action) => {
-        if (action.payload.error && action.payload.message === "notMatch") {          
+        if (action.payload.error && action.payload.message === "notMatch") {
           state.status = action.payload.message;
           return;
         }
@@ -107,8 +121,26 @@ const authSlice = createSlice({
       })
 
       .addCase(signupApi.fulfilled, (state, action) => {
-        state.status = "success";
-        state.token = action.payload.token;
+        switch (action.payload.message) {
+          case "invalid email":
+            state.status = "invalid email";
+            break;
+
+          case "invalid username":
+            state.status = "invalid username";
+            break;
+          case "re password not match":
+            state.status = "re password not match";
+            break;
+
+          default:
+            state.error = "Something went wrong";
+            break;
+        }
+        if (action.payload.error === false) {
+          state.status = "successSignUP";
+          state.token = action.payload.token;
+        }
 
         if (typeof window !== "undefined") {
           localStorage.setItem("token", action.payload.token);

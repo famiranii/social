@@ -2,7 +2,7 @@ export default function Page() {
   return (
     <div className="flex-1 h-full flex flex-col">
       {/* Header */}
-      <div className="h-18 px-6 border-b bg-gray-50 flex items-center justify-between" />
+      <div className="h-18 px-6 bg-gray-300 flex items-center justify-between" />
 
       {/* Empty state */}
       <div className="flex-1 flex items-center justify-center">

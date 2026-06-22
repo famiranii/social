@@ -32,7 +32,7 @@ export default function page() {
   return (
     <div className="flex-1 h-full flex flex-col">
       {/* Header */}
-      <div className="h-18 px-6 border-b bg-gray-50 flex items-center justify-between">
+      <div className="h-18 px-6 border-b bg-gray-300 flex items-center justify-between">
         <div
           className="flex items-center gap-4 cursor-pointer"
           onClick={userProfileClickHandler}
@@ -89,7 +89,7 @@ export default function page() {
       </div>
 
       {/* Input */}
-      <div className="bg-white border-t p-4">
+      <div className="bg-gray-300 border-t p-4">
         <div className="flex items-center gap-3">
           <input
             type="text"

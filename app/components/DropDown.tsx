@@ -4,10 +4,6 @@ import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { dropdownType } from "@/types/dropdownType";
 
-type Country = {
-  id: number;
-  name: string;
-};
 
 export default function DropDown({ options }: { options: dropdownType[] }) {
   const [open, setOpen] = useState(false);

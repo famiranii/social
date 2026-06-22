@@ -17,6 +17,7 @@ type FormData = {
   email: string;
   username: string;
   password: string;
+  re_password: string;
 };
 
 export default function SignupForm() {
@@ -34,13 +35,24 @@ export default function SignupForm() {
     await dispatch(signupApi(data));
   };
   useEffect(() => {
-    if (authInfo.status === "success") {
-      toast.success("Login successful");
-      router.push("/");
+    if (authInfo.status === "successSignUP") {
+      toast.success("Sign up was successful");
+      router.push("/login");
     }
 
     if (authInfo.status === "failed") {
-      toast.error(authInfo.error || "Login failed");
+      toast.error(authInfo.error ?? "Sign up failed");
+    }
+
+    if (authInfo.status === "invalid username") {
+      toast.error(authInfo.error ?? "Username already exists");
+    }
+
+    if (authInfo.status === "invalid email") {
+      toast.error(authInfo.error ?? "Email is already registered");
+    }
+    if (authInfo.status === "re password not match") {
+      toast.error(authInfo.error ?? "re password not match");
     }
   }, [authInfo.status, authInfo.error]);
 
@@ -67,6 +79,12 @@ export default function SignupForm() {
           Icon={PasswordIcon}
           {...register("password")}
           error={errors.password?.message}
+        />
+        <LoginInput
+          title="Password Again"
+          Icon={PasswordIcon}
+          {...register("re_password")}
+          error={errors.re_password?.message}
         />
       </div>
       <div className="mt-6 w-full flex justify-center">
