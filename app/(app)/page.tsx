@@ -30,8 +30,8 @@ export default function Home() {
   return (
     <div className="font-sans p-8">
       <div className="flex flex-wrap gap-6 justify-center">
-        {users?.map((user) => (
-          <PersonalCard key={user.id} user={user} />
+        {users?.map((user,index) => (
+          <PersonalCard key={index} user={user} />
         ))}
       </div>
     </div>

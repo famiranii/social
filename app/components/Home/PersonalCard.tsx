@@ -6,17 +6,16 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import ChatIconBtn from "../btns/ChatIconBtn";
 import { User } from "@/types/user";
-import { div } from "framer-motion/client";
 
 export default function PersonalCard({ user }: { user: User }) {
+
   const router = useRouter();
 
   const PersonalCardClicked = () => {
-    router.push("/" + user.username);
+    router.push("/" + user.id);
   };
-  const bio =
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaquerecusandae dolores ea nostrum, ratione voluptates perferendisprovident optio laudantium eius perspiciatis magni et voluptateeligendi? Inventore aspernatur numquam illo deleniti!";
-  const trimmed = bio.slice(0, 120) + "...";
+  const bio = user?.biography;
+  const trimmed = bio?.slice(0, 120) + "...";
 
   return (
     <div className="p-1 bg-amber-50 rounded-2xl">
@@ -61,11 +60,11 @@ export default function PersonalCard({ user }: { user: User }) {
         "
         >
           <p className="text-xl font-bold">
-            {user.first_name} {user.last_name}
+            {user?.first_name} {user?.last_name}
           </p>
 
           <p className="text-sm text-white/80 mt-1">
-            {user.job} • {user.country} • {user.age}
+            {user?.job} • {user?.country} • {user?.age}
           </p>
 
           <p className="text-xs text-white/70 mt-2 line-clamp-3">{trimmed}</p>

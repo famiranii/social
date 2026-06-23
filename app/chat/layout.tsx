@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import BackwardBtn from "./components/BackwardIBtn";
 import SearchInput from "./components/SearchInput";
 import { useState } from "react";
@@ -63,7 +62,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
 
         <div className="flex-1 overflow-y-auto">
           {filteredChats.map((chat) => (
-            <ChatItem chat={chat} />
+            <ChatItem chat={chat} key={chat.id} />
           ))}
         </div>
       </aside>

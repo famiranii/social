@@ -47,3 +47,5 @@ export const api = {
 
   delete: <T>(url: string) => request<T>(url, { method: "DELETE" }),
 };
+
+// credentials: "include", //

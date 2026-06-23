@@ -1,36 +1,31 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import DropDown from "../DropDown";
 import { api } from "../lib/api";
 import { ResponseType } from "@/types/responseType";
 import { dropdownType } from "@/types/dropdownType";
-
-type Country = {
-  id: number;
-  name: string;
-};
+import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
+import { getCountriesApi } from "@/store/featurs/getCountriesSlice";
 
 export default function HeaderDropdown() {
-  const [open, setOpen] = useState(false);
+  const options = useAppSelector((state) => state.countries.countries);
+  const dispatch = useAppDispatch();
   const [selected, setSelected] = useState("Iran");
-  const [options, setOptions] = useState<dropdownType[]>([]);
 
   useEffect(() => {
-    const getCountries = async () => {
-      try {
-        const res: ResponseType = await api.get("countries");
-        console.log(res.data);
-        setOptions(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getCountries();
+    if (options.length === 0) {
+      dispatch(getCountriesApi());
+    }
   }, []);
+
   return (
     <div className="relative w-48">
-      <DropDown options={options} />
+      <DropDown
+        options={options}
+        value={selected}
+        onChange={(value) => setSelected(value)}
+      />
     </div>
   );
 }

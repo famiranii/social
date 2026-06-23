@@ -1,10 +1,23 @@
 export type User = {
-  id: string;
+  id: number;
+  username: string;
+  email: string;
+
   first_name: string;
   last_name: string;
-  email: string;
-  username: string;
+
+  age: number | null;
+  birthday: string | null;
+  job: string | null;
+
   country: string;
-  job: string;
-  age: number;
+  city: string;
+  sex: string | null;
+  biography: string;
+
+  lat: string | null;
+  lon: string | null;
+  ip: string | null;
+
+  image: string | null;
 };
