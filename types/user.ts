@@ -7,7 +7,7 @@ export type User = {
   last_name: string;
 
   age: number | null;
-  birthday: string | null;
+  birthday: string ;
   job: string | null;
 
   country: string;

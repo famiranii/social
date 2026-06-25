@@ -28,7 +28,7 @@ export const getCountriesApi = createAsyncThunk(
 );
 
 const countriesSlice = createSlice({
-  name: "auth",
+  name: "country",
   initialState,
 
   reducers: {},

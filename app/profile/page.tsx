@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { PenIcon } from "lucide-react";
-import BirthDaate from "./components/BirthDaate";
+import BirthDate from "./components/BirthDate";
 import DropDown from "../components/DropDown";
 import FormInput from "./components/FromInput";
 import HobbiesInput from "./components/HobbiesInput";
@@ -18,6 +18,7 @@ import { getCountriesApi } from "@/store/featurs/getCountriesSlice";
 
 export default function Page() {
   const countries = useAppSelector((state) => state.countries.countries);
+  const userInfo = useAppSelector((state) => state.userInfo.userInfo);
   const dispatch = useAppDispatch();
   const [image, setImage] = useState("/images/random-image.jpg");
 
@@ -32,6 +33,7 @@ export default function Page() {
     handleSubmit,
     setValue,
     control,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<infoType>({
     resolver: zodResolver(infoSchema),
@@ -40,11 +42,14 @@ export default function Page() {
     control,
     name: "country",
   });
+  const birthday = useWatch({
+    control,
+    name: "birthday",
+  });
   const onSubmit = async (payload: infoType) => {
     try {
       let uploadedImageUrl: string | undefined;
 
-      // 1. upload image (separate API)
       if (payload.image) {
         const formData = new FormData();
         formData.append("image", payload.image);
@@ -52,10 +57,9 @@ export default function Page() {
 
         const res: any = await api.post("upload", formData);
 
-        uploadedImageUrl = res.data; // فرض: API لینک میده
+        uploadedImageUrl = res.data;
       }
 
-      // 2. prepare info payload
       const formData = new FormData();
 
       Object.entries(payload).forEach(([key, value]) => {
@@ -65,16 +69,8 @@ export default function Page() {
           formData.append(key, value as any);
         }
       });
-
-      // اگر API نیاز داره image url هم ذخیره کنه
-      // if (uploadedImageUrl) {
-      //   formData.append("image", uploadedImageUrl);
-      // }
-
-      // 3. send info
+      formData.append("user_id", "2");
       const response: any = await api.post("info", formData);
-
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -88,6 +84,24 @@ export default function Page() {
       setValue("image", file);
     }
   };
+
+  useEffect(() => {
+    if (!userInfo) return;
+
+    reset({
+      first_name: userInfo.first_name,
+      last_name: userInfo.last_name,
+      username: userInfo.username,
+      country: userInfo.country,
+      city: userInfo.city,
+      biography: userInfo.biography,
+      birthday: userInfo.birthday,
+    });
+
+    // if (userInfo.image) {
+    //   setImage(userInfo.image);
+    // }
+  }, [userInfo, reset]);
 
   return (
     <div className="h-screen flex justify-center items-center py-3">
@@ -126,7 +140,10 @@ export default function Page() {
             </div>
             <div className="flex items-end justify-between gap-2">
               <FormInput title="username" {...register("username")} />
-              <BirthDaate />
+              <BirthDate
+                value={birthday || "2022"}
+                onChange={(value) => setValue("birthday", value)}
+              />
             </div>
             <div className="flex items-end justify-between gap-2">
               <DropDown

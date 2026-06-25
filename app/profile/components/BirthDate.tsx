@@ -5,7 +5,14 @@ import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
-export default function DateInput() {
+type Props = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+export default function DateInput({ value, onChange }: Props) {
+  console.log(value);
+  
   const [selected, setSelected] = useState<Date | undefined>();
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState(false);
@@ -15,6 +22,7 @@ export default function DateInput() {
 
     const formatted = format(selected, "yyyy-MM-dd");
     setInputValue(formatted);
+    onChange(formatted);
     setOpen(false);
   };
 
@@ -50,7 +58,7 @@ export default function DateInput() {
       )}
       <input
         id="date"
-        value={inputValue}
+        value={inputValue || value || ""}
         placeholder="Select date"
         onClick={() => setOpen(!open)}
         onChange={(e) => setInputValue(e.target.value)}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { api } from "./lib/api";
 
 export default function GetLocation() {
   const [open, setOpen] = useState(false);
@@ -20,26 +21,36 @@ export default function GetLocation() {
       return;
     }
 
-    // Optional: check permission first (supported in most modern browsers)
     if (navigator.permissions?.query) {
       navigator.permissions
         .query({ name: "geolocation" as PermissionName })
         .then((result) => {
           if (result.state === "granted") {
-            setOpen(false); // already allowed → don’t show modal
+            setOpen(false);
           }
         })
         .catch(() => {});
     }
 
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         console.log("lat:", pos.coords.latitude);
         console.log("lng:", pos.coords.longitude);
 
-        // we have location access → hide modal
-        setOpen(false);
-        setLoading(false);
+        try {
+          const res = await api.put("info", {
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude,
+          });
+          console.log(res);
+
+          console.log("Location saved successfully");
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setOpen(false);
+          setLoading(false);
+        }
       },
       (err) => {
         console.log("error:", err.message);

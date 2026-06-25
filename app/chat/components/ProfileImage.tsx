@@ -1,7 +1,10 @@
+import { useAppSelector } from "@/store/hooks/redux";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function ProfileImage() {
+  const userInfo = useAppSelector((state) => state.userInfo.userInfo);
+  console.log(userInfo);
   return (
     <Link href={"/profile"}>
       <div className="relative ">

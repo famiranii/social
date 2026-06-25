@@ -28,7 +28,7 @@ export default function BiggerPersonalCard({ user }: { user: User }) {
       </div>
 
       {/* ACTION BUTTONS */}
-      <div className="w-28 bg-gray-700 rounded-3xl flex items-center justify-around py-2">
+      <div className="w-28 bg-gray-700 rounded-full flex items-center justify-around py-1">
         <RedHeartIcon />
         <ChatIconBtn />
         <StarIcon />
@@ -37,7 +37,7 @@ export default function BiggerPersonalCard({ user }: { user: User }) {
       {/* NAME */}
       <div>
         <p className="text-black font-bold text-2xl text-center">
-          {user?.first_name || user?.username}
+          {user?.first_name || user?.last_name}
         </p>
 
         <p className="text-gray-500 text-sm text-center">@{user?.username}</p>

@@ -29,12 +29,13 @@ const initialState: AuthState = {
 export const loginApi = createAsyncThunk(
   "auth/login",
   async (payload: { username: string; password: string }, thunkAPI) => {
+    console.log("data");
     try {
       const data = await api.post<{
         token: string;
         error: boolean;
         message: string;
-        user_id: number;
+        id: number;
       }>("login", payload);
 
       return data;
@@ -107,11 +108,12 @@ const authSlice = createSlice({
         }
         state.status = "success";
         state.token = action.payload.token;
-        state.userId = action.payload.user_id || 2;
+        state.userId = action.payload.id || 2;
         console.log(action.payload);
 
         if (typeof window !== "undefined") {
           localStorage.setItem("token", action.payload.token);
+          localStorage.setItem("id", action.payload.id.toString());
         }
       })
 
