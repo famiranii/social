@@ -9,7 +9,11 @@ export default function ProfileImage() {
     <Link href={"/profile"}>
       <div className="relative ">
         <Image
-          src={"/images/random-image.jpg"}
+          src={
+            userInfo?.image
+              ? process.env.NEXT_PUBLIC_IMAGE_URL + userInfo?.image
+              : "/images/random-image.jpg"
+          }
           alt={"profile"}
           width={40}
           height={40}

@@ -5,10 +5,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "195.181.41.139",
-        pathname: "/api/images/**",
+        pathname: "/**",
       },
     ],
   },
 };
 
-module.exports = nextConfig;
+module.exports = nextConfig;  

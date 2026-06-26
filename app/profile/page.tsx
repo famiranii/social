@@ -47,6 +47,8 @@ export default function Page() {
     name: "birthday",
   });
   const onSubmit = async (payload: infoType) => {
+    console.log("fff");
+
     try {
       let uploadedImageUrl: string | undefined;
 
@@ -70,6 +72,8 @@ export default function Page() {
         }
       });
       formData.append("user_id", "2");
+      console.log(formData);
+
       const response: any = await api.post("info", formData);
     } catch (error) {
       console.error(error);
@@ -89,13 +93,16 @@ export default function Page() {
     if (!userInfo) return;
 
     reset({
-      first_name: userInfo.first_name,
-      last_name: userInfo.last_name,
-      username: userInfo.username,
-      country: userInfo.country,
-      city: userInfo.city,
-      biography: userInfo.biography,
-      birthday: userInfo.birthday,
+      first_name: userInfo.first_name ?? "",
+      last_name: userInfo.last_name ?? "",
+      username: userInfo.username ?? "",
+      country: userInfo.country ?? "",
+      city: userInfo.city ?? "",
+      biography: userInfo.biography ?? "",
+      birthday: userInfo.birthday ?? "",
+      sex: userInfo.sex ?? "",
+      age: userInfo.age ?? 0,
+      job: userInfo.job ?? "",
     });
 
     // if (userInfo.image) {
@@ -105,14 +112,20 @@ export default function Page() {
 
   return (
     <div className="h-screen flex justify-center items-center py-3">
-      <div className="w-full h-full max-w-xl flex flex-col justify-center  overflow-y-auto backdrop-blur-2xl bg-amber-50/15 rounded-2xl shadow md:p-6">
+      <div className="w-full h-full max-w-xl flex flex-col justify-center  overflow-y-auto backdrop-blur-2xl bg-amber-50/15 rounded-2xl shadow md:p-">
         {/* Profile Photo */}
         <form onSubmit={handleSubmit(onSubmit)}>
+          {" "}
           <div className="flex flex-col items-center gap-4 mb-8">
             <label className="relative cursor-pointer">
-              <div className="w-30 h-30 rounded-full overflow-hidden relative">
+              <div className="w-30 h-30 border rounded-full overflow-hidden relative">
                 <Image
-                  src={image}
+                  src={
+                    image ||
+                    (userInfo.image &&
+                      process.env.NEXT_PUBLIC_IMAGE_URL + userInfo?.image) ||
+                    " /images/admnor - image.jpg"
+                  }
                   alt="Profile"
                   fill
                   className="object-cover"
@@ -131,7 +144,6 @@ export default function Page() {
               />
             </label>
           </div>
-
           {/* Name */}
           <div className="space-y-3 w-full px-6">
             <div className="flex items-end justify-between gap-2">
@@ -141,7 +153,7 @@ export default function Page() {
             <div className="flex items-end justify-between gap-2">
               <FormInput title="username" {...register("username")} />
               <BirthDate
-                value={birthday || "2022"}
+                value={birthday || ""}
                 onChange={(value) => setValue("birthday", value)}
               />
             </div>
@@ -155,6 +167,11 @@ export default function Page() {
             </div>
             <div>
               <FormInput title="biography" {...register("biography")} />
+            </div>
+            <div className="flex justify-between items-end gap-2">
+              <FormInput title="age" {...register("age")} type="number" />
+              <FormInput title="sex" {...register("sex")} />
+              <FormInput title="job" {...register("job")} />
             </div>
             <div>
               <HobbiesInput />

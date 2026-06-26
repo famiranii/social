@@ -6,13 +6,11 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
 type Props = {
-  value: string;
+  value: string ;
   onChange: (value: string) => void;
 };
 
-export default function DateInput({ value, onChange }: Props) {
-  console.log(value);
-  
+export default function DateInput({ value, onChange }: Props) {  
   const [selected, setSelected] = useState<Date | undefined>();
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState(false);

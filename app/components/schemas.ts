@@ -31,4 +31,5 @@ export const infoSchema = z.object({
   ip: z.string().optional(),
   biography: z.string().optional(),
   birthday: z.string().optional(),
+  sex: z.string().optional(),
 });

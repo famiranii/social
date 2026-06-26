@@ -13,4 +13,5 @@ export type infoType = {
   ip?: string;
   biography?: string;
   birthday?: string;
+  sex?: string;
 };

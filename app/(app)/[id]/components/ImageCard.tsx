@@ -19,7 +19,7 @@ export default function ImageCard({ image }: { image: UserImage }) {
   return (
     <div className="cursor-pointer w-30 md:w-50" onClick={imageClicked}>
       <Image
-        src={process.env.NEXT_PUBLIC_API_URL + image.image}
+        src={process.env.NEXT_PUBLIC_IMAGE_URL + image.image}
         width={200}
         height={200}
         alt="info"

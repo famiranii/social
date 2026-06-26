@@ -18,7 +18,7 @@ export default function BiggerPersonalCard({ user }: { user: User }) {
         <Image
           src={
             user?.image
-              ? process.env.NEXT_PUBLIC_API_URL + user?.image
+              ? process.env.NEXT_PUBLIC_IMAGE_URL + user?.image
               : "/images/random-image.jpg"
           }
           alt="profile"

@@ -6,13 +6,13 @@ export type User = {
   first_name: string;
   last_name: string;
 
-  age: number | null;
-  birthday: string ;
-  job: string | null;
+  age: number;
+  birthday: string;
+  job: string;
 
   country: string;
   city: string;
-  sex: string | null;
+  sex: string;
   biography: string;
 
   lat: string | null;

@@ -3,13 +3,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../app/components/lib/api";
 import { User } from "@/types/user";
 
-interface countiesState {
+interface userInfo {
   userInfo: User;
   status: "idle" | "loading" | "success";
   error: string | null;
 }
 
-const initialState: countiesState = {
+const initialState: userInfo = {
   userInfo: {
     id: 0,
     username: "",
@@ -42,7 +42,10 @@ export const getUserInfoApi = createAsyncThunk(
   async (payload: { id: number }, thunkAPI) => {
     try {
       const res: { user: User } = await api.post("user", payload);
-      return res;
+      const image: { data: string } = await api.post("profile/image", {
+        user_id: payload.id,
+      });
+      return { ...res, image };
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.message || "there is problem");
     }
@@ -64,7 +67,11 @@ const userInfoSlice = createSlice({
 
       .addCase(getUserInfoApi.fulfilled, (state, action) => {
         console.log(action.payload);
-        state.userInfo = action.payload.user;
+        state.userInfo = {
+          ...action.payload.user,
+          image: action.payload.image.data,
+        };
+        console.log(action.payload.image);
       })
 
       .addCase(getUserInfoApi.rejected, (state, action) => {
