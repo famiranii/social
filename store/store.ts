@@ -3,6 +3,7 @@ import uiSlice from "./featurs/uiSlice";
 import authSlice from "./featurs/authSlice";
 import countriesSlice from "./featurs/getCountriesSlice";
 import userInfoSlice from "./featurs/userInfoSlice";
+import usersSlice from "./featurs/getUsersSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     auth: authSlice,
     countries: countriesSlice,
     userInfo: userInfoSlice,
+    users: usersSlice,
   },
 });
 

@@ -44,9 +44,7 @@ export default function LoginForm() {
       toast.error(authInfo.error || "Login failed");
     }
     if (authInfo.status === "notMatch") {
-      toast.error(authInfo.error || "Username Or Password Is Wrong");
-      console.log("f");
-      
+      toast.error(authInfo.error || "Username Or Password Is Wrong");      
     }
   }, [authInfo.status, authInfo.error]);
 

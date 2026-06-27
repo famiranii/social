@@ -10,11 +10,6 @@ export default function ImageCard({ image }: { image: UserImage }) {
   const imageClicked = () => {
     dispatch(openModal("photo-slider"));
   };
-  console.log(
-    process.env.NEXT_PUBLIC_IMAGE_URL +
-      "var/www/api/app/public/storage/" +
-      image.image,
-  );
 
   return (
     <div className="cursor-pointer w-30 md:w-50" onClick={imageClicked}>

@@ -1,36 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import PersonalCard from "../components/Home/PersonalCard";
-import { api } from "../components/lib/api";
-import { User } from "@/types/user";
-import { ResponseType } from "@/types/responseType";
-import { toast } from "sonner";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
+import { getUsersApi } from "@/store/featurs/getUsersSlice";
 
 export default function Home() {
-  const [users, setUsers] = useState<User[]>([]);
+  const users = useAppSelector((state) => state.users.users);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const getUsers = async () => {
-      try {
-        const result: ResponseType = await api.get("users");
-        console.log(result);
-        setUsers(result.data);
-        if (result.message === "token error") {
-          toast.error("there is problme with your login . pleas try it again");
-        }
-      } catch (error) {
-        console.error(error);
-      }
+      dispatch(getUsersApi());
     };
-
     getUsers();
   }, []);
 
   return (
     <div className="font-sans p-8">
       <div className="flex flex-wrap gap-6 justify-center">
-        {users?.map((user,index) => (
+        {users.length === 0 && (
+          <div className="bg-red-800 w-100 text-center p-10">
+            <p>there isnt any user for this filter</p>
+          </div>
+        )}
+        {users?.map((user, index) => (
           <PersonalCard key={index} user={user} />
         ))}
       </div>

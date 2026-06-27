@@ -18,7 +18,7 @@ const initialState: userInfo = {
     first_name: "",
     last_name: "",
 
-    age: null,
+    age: 0,
     birthday: "",
     job: "",
 
@@ -66,12 +66,10 @@ const userInfoSlice = createSlice({
       })
 
       .addCase(getUserInfoApi.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.userInfo = {
           ...action.payload.user,
           image: action.payload.image.data,
         };
-        console.log(action.payload.image);
       })
 
       .addCase(getUserInfoApi.rejected, (state, action) => {

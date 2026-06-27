@@ -16,7 +16,6 @@ export default function GetLocation() {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      console.log("Geolocation not supported");
       setLoading(false);
       return;
     }
@@ -34,26 +33,19 @@ export default function GetLocation() {
 
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        console.log("lat:", pos.coords.latitude);
-        console.log("lng:", pos.coords.longitude);
 
         try {
           const res = await api.put("info", {
             lat: pos.coords.latitude,
             lon: pos.coords.longitude,
           });
-          console.log(res);
-
-          console.log("Location saved successfully");
         } catch (error) {
-          console.log(error);
         } finally {
           setOpen(false);
           setLoading(false);
         }
       },
       (err) => {
-        console.log("error:", err.message);
         setOpen(true);
         setLoading(false);
       },

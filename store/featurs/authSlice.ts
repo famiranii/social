@@ -16,20 +16,19 @@ interface AuthState {
     | "Something went wrong"
     | "re password not match";
   error: string | null;
-  userId: number;
+  userId: number | null;
 }
 
 const initialState: AuthState = {
   token: "",
   status: "idle",
   error: null,
-  userId: 0,
+  userId: null,
 };
 
 export const loginApi = createAsyncThunk(
   "auth/login",
   async (payload: { username: string; password: string }, thunkAPI) => {
-    console.log("data");
     try {
       const data = await api.post<{
         token: string;
@@ -109,7 +108,6 @@ const authSlice = createSlice({
         state.status = "success";
         state.token = action.payload.token;
         state.userId = action.payload.id || 2;
-        console.log(action.payload);
 
         if (typeof window !== "undefined") {
           localStorage.setItem("token", action.payload.token);

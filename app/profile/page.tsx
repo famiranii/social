@@ -15,10 +15,14 @@ import Loading from "../components/Loading";
 import { infoType } from "@/types/infoTypes";
 import { api } from "../components/lib/api";
 import { getCountriesApi } from "@/store/featurs/getCountriesSlice";
+import { toast } from "sonner";
 
 export default function Page() {
   const countries = useAppSelector((state) => state.countries.countries);
   const userInfo = useAppSelector((state) => state.userInfo.userInfo);
+  const user_id = String(
+    useAppSelector((state) => state.auth.userId) ?? localStorage.getItem("id"),
+  );
   const dispatch = useAppDispatch();
   const [image, setImage] = useState("/images/random-image.jpg");
 
@@ -47,36 +51,58 @@ export default function Page() {
     name: "birthday",
   });
   const onSubmit = async (payload: infoType) => {
-    console.log("fff");
-
     try {
       let uploadedImageUrl: string | undefined;
 
       if (payload.image) {
-        const formData = new FormData();
-        formData.append("image", payload.image);
-        formData.append("user_id", "2");
+        const imageFormData = new FormData();
+        imageFormData.append("image", payload.image);
+        imageFormData.append("user_id", user_id);
 
-        const res: any = await api.post("upload", formData);
+        const uploadResponse: { url: string } = await api.post(
+          "upload",
+          imageFormData,
+        );
+        uploadedImageUrl = uploadResponse.url;
 
-        uploadedImageUrl = res.data;
+        const profileFormData = new FormData();
+        profileFormData.append("user_id", user_id);
+        profileFormData.append("image", uploadedImageUrl);
+
+        await api.post("set/profile", profileFormData);
       }
 
-      const formData = new FormData();
+      const infoFormData = new FormData();
 
       Object.entries(payload).forEach(([key, value]) => {
-        if (key === "image") return; // skip file
+        if (key === "image") return;
 
         if (value !== undefined && value !== null) {
-          formData.append(key, value as any);
+          infoFormData.append(key, String(value));
         }
       });
-      formData.append("user_id", "2");
-      console.log(formData);
 
-      const response: any = await api.post("info", formData);
-    } catch (error) {
+      if (uploadedImageUrl) {
+        infoFormData.append("image", uploadedImageUrl);
+      }
+
+      infoFormData.append("user_id", user_id);
+
+      const response: { data: any; error: boolean; message: string } =
+        await api.post("info", infoFormData);
+      if (response.error) {
+        toast.error(
+          response.message || "There was an error updating your profile.",
+        );
+      }
+
+      toast.success("Profile updated successfully.");
+    } catch (error: any) {
       console.error(error);
+      toast.error(
+        error?.response?.data?.message ||
+          "There was an error updating your profile.",
+      );
     }
   };
 
@@ -115,7 +141,6 @@ export default function Page() {
       <div className="w-full h-full max-w-xl flex flex-col justify-center  overflow-y-auto backdrop-blur-2xl bg-amber-50/15 rounded-2xl shadow md:p-">
         {/* Profile Photo */}
         <form onSubmit={handleSubmit(onSubmit)}>
-          {" "}
           <div className="flex flex-col items-center gap-4 mb-8">
             <label className="relative cursor-pointer">
               <div className="w-30 h-30 border rounded-full overflow-hidden relative">

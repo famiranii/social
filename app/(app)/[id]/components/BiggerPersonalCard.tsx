@@ -1,61 +1,128 @@
 import ChatIconBtn from "@/app/components/btns/ChatIconBtn";
-import ChatIcon from "@/public/icons/ChatIcon";
 import RedHeartIcon from "@/public/icons/RedHeartIcon";
 import StarIcon from "@/public/icons/StarIcon";
 import { User } from "@/types/user";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const AddPostBtn = dynamic(() => import("./AddPostBtn"), {
+  ssr: false,
+});
 
 export default function BiggerPersonalCard({ user }: { user: User }) {
   return (
     <div
-      className="flex flex-col items-center gap-2
-      w-80 md:w-100 h-140 rounded-2xl bg-amber-50
-      shadow-[5px_5px_10px_rgba(0,0,0,0.5)]
+      className="
+      w-80 md:w-96
+      overflow-hidden
+      rounded-3xl
+      bg-white
+      shadow-xl
+      border border-gray-200
+      transition-all
+      duration-300
+      hover:-translate-y-2
+      hover:shadow-2xl
+      max-h-150
     "
     >
-      {/* IMAGE */}
-      <div className="relative w-full h-48 rounded-t-2xl overflow-hidden">
+      {/* Cover */}
+      <div className="relative h-56">
         <Image
           src={
             user?.image
-              ? process.env.NEXT_PUBLIC_IMAGE_URL + user?.image
+              ? process.env.NEXT_PUBLIC_IMAGE_URL + user.image
               : "/images/random-image.jpg"
           }
           alt="profile"
           fill
           className="object-cover"
         />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+        {/* Floating avatar */}
+        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
+          <div className="relative h-24 w-24 rounded-full overflow-hidden border-4 border-white shadow-lg">
+            <Image
+              src={
+                user?.image
+                  ? process.env.NEXT_PUBLIC_IMAGE_URL + user.image
+                  : "/images/random-image.jpg"
+              }
+              alt="avatar"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* ACTION BUTTONS */}
-      <div className="w-28 bg-gray-700 rounded-full flex items-center justify-around py-1">
-        <RedHeartIcon />
-        <ChatIconBtn />
-        <StarIcon />
-      </div>
+      <div
+        className="pt-16 px-6 pb-6 flex flex-col items-center overflow-y-scroll h-80
+"
+      >
+        {/* Name */}
+        <h2 className="text-2xl font-bold text-gray-900">
+          {user?.first_name} {user?.last_name}
+        </h2>
 
-      {/* NAME */}
-      <div>
-        <p className="text-black font-bold text-2xl text-center">
-          {user?.first_name || user?.last_name}
+        <p className="text-gray-500">@{user?.username}</p>
+
+        {/* Bio */}
+        <p className="mt-4 text-center text-sm text-gray-600 leading-6">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, porro
+          commodi, voluptatum veniam laborum repellendus sit ipsum officia ullam
+          dolore nesciunt voluptas praesentium doloremque eos beatae. Nobis
+          neque quisquam minima quos iste, itaque iusto. Veniam alias
+          exercitationem nobis, optio officiis facilis commodi placeat!
+          Repudiandae inventore, placeat obcaecati alias accusantium nobis
+          voluptatem atque aliquid ut sapiente pariatur iste expedita quibusdam
+          doloremque. Obcaecati modi iusto explicabo odit aperiam vero sed quasi
+          facere, atque, laudantium laboriosam, eius itaque voluptates laborum
+          quos quis quae illum ratione totam adipisci. Libero enim sint tempore
+          facere veritatis error dolores voluptatem, hic esse culpa delectus
+          inventore! Corporis, voluptas?
         </p>
 
-        <p className="text-gray-500 text-sm text-center">@{user?.username}</p>
-      </div>
+        {/* Info */}
+        <div className="flex flex-wrap justify-center gap-2 mt-5">
+          {user?.city && (
+            <span className="rounded-full bg-gray-300 px-3 py-1 text-xs">
+              📍 {user.city}
+            </span>
+          )}
 
-      {/* user */}
-      <div className="px-4">
-        <p className="text-black text-xs text-center leading-5">
-          {user?.biography ||
-            "This usersn't written a bio yet. Explore their profile to learn more."}
-        </p>
-      </div>
+          {user?.country && (
+            <span className="rounded-full bg-gray-300 px-3 py-1 text-xs">
+              🌍 {user.country}
+            </span>
+          )}
 
-      {/* EXTRA user */}
-      <div className="flex gap-3 text-xs text-gray-600 mt-2">
-        {user?.city && <span>📍 {user.city}</span>}
-        {user?.country && <span>🌍 {user.country}</span>}
-        {user?.age && <span>🎂 {user.age}</span>}
+          {user?.age && (
+            <span className="rounded-full bg-gray-300 px-3 py-1 text-xs">
+              🎂 {user.age}
+            </span>
+          )}
+        </div>
+        {/* Actions */}
+        <div className="flex gap-4 mt-6">
+          <button className="h-12 w-12 rounded-full bg-red-100 hover:bg-red-200 transition flex items-center justify-center">
+            <RedHeartIcon />
+          </button>
+
+          <button className="h-12 w-12 rounded-full bg-blue-100 hover:bg-blue-200 transition flex items-center justify-center">
+            <ChatIconBtn />
+          </button>
+
+          <button className="h-12 w-12 rounded-full bg-yellow-100 hover:bg-yellow-200 transition flex items-center justify-center">
+            <StarIcon />
+          </button>
+        </div>
+
+        <div className="mt-8 w-full">
+          <AddPostBtn />
+        </div>
       </div>
     </div>
   );

@@ -10,7 +10,6 @@ export default function layout({
 }) {
   const isLogin = params.type === "login";
   const isSignup = params.type === "signup";
-  console.log(isLogin);
 
   return (
     <div className="flex flex-col lg:flex-row">

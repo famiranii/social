@@ -17,7 +17,7 @@ export default function PersonalGallery() {
     first_name: "",
     last_name: "",
     age: 0,
-    birthday: null,
+    birthday: "",
     job: "",
     country: "",
     city: "",
@@ -34,7 +34,6 @@ export default function PersonalGallery() {
         const response: any = await api.post("images", {
           user_id: userId,
         });
-        console.log(response.data);
         setImages(response.data);
       } catch (error) {}
     };
@@ -43,7 +42,6 @@ export default function PersonalGallery() {
         const response: any = await api.post("user", {
           id: userId,
         });
-        console.log(response.user);
         setUserInfo(response.user);
       } catch (error) {}
     };
