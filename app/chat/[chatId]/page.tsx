@@ -1,7 +1,11 @@
 "use client";
 import EllipsisDropdown from "@/app/components/ElipsisDropdown";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import SendMessageInput from "../components/SendMessageInput";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
+import { useEffect } from "react";
+import { getCoversationApi } from "@/store/featurs/chatSlice";
 
 const messages = [
   {
@@ -26,9 +30,23 @@ const messages = [
 
 export default function page() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.chatId;
+  const chatPerson = useAppSelector((state) => state.chats.chatPerson);
+  const chatInfo = useAppSelector((state) => state.chats.chatInfo);
+  const dispatch = useAppDispatch();
   const userProfileClickHandler = () => {
     router.push("/fakeid");
   };
+
+  useEffect(() => {
+    if (id) {
+      const conv_id = +id;
+      const getConversation = async () =>
+        await dispatch(getCoversationApi({ conv_id, paginate: 0 }));
+      getConversation();
+    }
+  }, []);
   return (
     <div className="flex-1 h-full flex flex-col">
       {/* Header */}
@@ -46,7 +64,9 @@ export default function page() {
           />
 
           <div>
-            <h2 className="font-semibold text-gray-900">Sarah Johnson</h2>
+            <h2 className="font-semibold text-gray-900">
+              {chatPerson?.conversation.username}
+            </h2>
 
             <p className="text-sm text-green-500">Online</p>
           </div>
@@ -60,28 +80,32 @@ export default function page() {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
-        {messages.map((message) => (
+        {chatInfo?.map((message) => (
           <div
-            key={message.id}
+            key={message.created_at}
             className={`flex ${
-              message.sender === "me" ? "justify-end" : "justify-start"
+              message.sender_id !== chatPerson?.conversation.id
+                ? "justify-end"
+                : "justify-start"
             }`}
           >
             <div
               className={`max-w-md rounded-3xl px-5 py-3 shadow-sm ${
-                message.sender === "me"
+                message.sender_id !== chatPerson?.conversation.id
                   ? "bg-sky-500 text-white rounded-br-lg"
                   : "bg-white text-gray-900 rounded-bl-lg"
               }`}
             >
-              <p>{message.text}</p>
+              <p>{message.body}</p>
 
               <div
                 className={`text-xs mt-2 ${
-                  message.sender === "me" ? "text-sky-100" : "text-gray-400"
+                  message.sender_id !== chatPerson?.conversation.id
+                    ? "text-sky-100"
+                    : "text-gray-400"
                 }`}
               >
-                {message.time}
+                {message.created_at}
               </div>
             </div>
           </div>
@@ -89,19 +113,7 @@ export default function page() {
       </div>
 
       {/* Input */}
-      <div className="bg-gray-300 border-t p-4">
-        <div className="flex items-center gap-3">
-          <input
-            type="text"
-            placeholder="Write a message..."
-            className="flex-1 rounded-full text-black bg-gray-200 px-5 py-3 outline-none focus:ring-2 focus:ring-sky-500"
-          />
-
-          <button className="rounded-full bg-sky-500 px-6 py-3 text-white font-medium hover:bg-sky-600 transition">
-            Send
-          </button>
-        </div>
-      </div>
+      <SendMessageInput />
     </div>
   );
 }

@@ -8,7 +8,6 @@ import ChatIconBtn from "../btns/ChatIconBtn";
 import { User } from "@/types/user";
 
 export default function PersonalCard({ user }: { user: User }) {
-
   const router = useRouter();
 
   const PersonalCardClicked = () => {
@@ -53,7 +52,8 @@ export default function PersonalCard({ user }: { user: User }) {
           className="
           absolute bottom-0 left-0 right-0
           p-4 text-white
-          transform translate-y-10 opacity-0
+          transform md:translate-y-10 md:opacity-0
+
           group-hover:translate-y-0 group-hover:opacity-100
           transition-all duration-300
           bg-gray-900/40

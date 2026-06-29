@@ -18,7 +18,7 @@ export default function DateInput({ value, onChange }: Props) {
   const handleSubmit = () => {
     if (!selected) return;
 
-    const formatted = format(selected, "yyyy-MM-dd");
+    const formatted = format(selected, "yyyy/MM/dd");
     setInputValue(formatted);
     onChange(formatted);
     setOpen(false);

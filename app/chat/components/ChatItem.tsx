@@ -1,23 +1,15 @@
+import { useAppDispatch } from "@/store/hooks/redux";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-
-type Chat = {
-  id: number;
-  name: string;
-  message: string;
-  time: string;
-  unread: number;
-  avatar: string;
-};
-
+import {useRouter } from "next/navigation";
 type ChatItemProps = {
-  chat: Chat;
+  chat: ConversationItem;
 };
 
 export default function ChatItem({ chat }: ChatItemProps) {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const chatItemClicked = () => {
-    router.push("/chat/" + chat.id);
+    router.push("/chat/" + chat.last_message.conversation_id);
   };
   return (
     <div
@@ -26,8 +18,8 @@ export default function ChatItem({ chat }: ChatItemProps) {
     >
       <div className="relative">
         <Image
-          src={chat.avatar}
-          alt={chat.name}
+          src={chat.conversation.image || "/images/random-image.jpg"}
+          alt={chat.conversation.username}
           width={56}
           height={56}
           className="rounded-full object-cover"
@@ -38,17 +30,23 @@ export default function ChatItem({ chat }: ChatItemProps) {
 
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-gray-900 truncate">{chat.name}</h3>
+          <h3 className="font-semibold text-gray-900 truncate">
+            {chat.conversation.username}
+          </h3>
 
-          <span className="text-xs text-gray-500">{chat.time}</span>
+          <span className="text-xs text-gray-500">
+            {chat.last_message.created_at}
+          </span>
         </div>
 
-        <p className="text-sm text-gray-500 truncate">{chat.message}</p>
+        <p className="text-sm text-gray-500 truncate">
+          {chat.last_message.body}
+        </p>
       </div>
 
-      {chat.unread > 0 && (
+      {!chat.last_message.seen_at && (
         <div className="flex items-center justify-center min-w-6 h-6 px-2 rounded-full bg-sky-500 text-white text-xs font-medium">
-          {chat.unread}
+          unread count
         </div>
       )}
     </div>

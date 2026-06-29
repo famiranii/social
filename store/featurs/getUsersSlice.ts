@@ -28,7 +28,7 @@ export const getUsersApi = createAsyncThunk(
 );
 export const getFilteredUsersApi = createAsyncThunk(
   "users/filtered",
-  async (country:string, thunkAPI) => {
+  async (country: string, thunkAPI) => {
     try {
       const result: ResponseType = await api.post("filter/users", { country });
       return result.data;
@@ -52,6 +52,7 @@ const usersSlice = createSlice({
 
       .addCase(getUsersApi.fulfilled, (state, action) => {
         state.users = action.payload;
+        state.status = "success";
       })
 
       .addCase(getUsersApi.rejected, (state, action) => {
@@ -64,6 +65,7 @@ const usersSlice = createSlice({
       })
       .addCase(getFilteredUsersApi.fulfilled, (state, action) => {
         state.users = action.payload;
+        state.status = "success";
       })
       .addCase(getFilteredUsersApi.rejected, (state, action) => {
         state.status = "idle";

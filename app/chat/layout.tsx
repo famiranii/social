@@ -1,71 +1,134 @@
 "use client";
+
+import { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
+
 import BackwardBtn from "./components/BackwardIBtn";
 import SearchInput from "./components/SearchInput";
-import { useState } from "react";
-import useDebounce from "../components/lib/useDebaounse";
-import { useRouter } from "next/navigation";
 import ChatItem from "./components/ChatItem";
 import ProfileImage from "./components/ProfileImage";
 
-const chats = [
-  {
-    id: 1,
-    name: "Sarah Johnson",
-    message: "See you tonight ❤️",
-    time: "12:45",
-    unread: 2,
-    avatar: "/images/random-image.jpg",
-  },
-  {
-    id: 2,
-    name: "Michael",
-    message: "Sent a photo",
-    time: "11:30",
-    unread: 0,
-    avatar: "/images/random-image.jpg",
-  },
-  {
-    id: 3,
-    name: "Emma Wilson",
-    message: "Typing...",
-    time: "09:12",
-    unread: 1,
-    avatar: "/images/random-image.jpg",
-  },
-];
+import useDebounce from "../components/lib/useDebaounse";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
+import { api } from "../components/lib/api";
+import { useParams } from "next/navigation";
+import { setChatPerson } from "@/store/featurs/chatSlice";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
+  const params = useParams();
+  const chatId = params.chatId;
+  const dispatch = useAppDispatch();
+  const userId = useAppSelector((state) => state.userInfo.userInfo.id);
+
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [chats, setChats] = useState<ConversationItem[]>([]);
+  useEffect(() => {
+    if (userId !== 0) {
+      const getChats = async () => {
+        const res: { data: ConversationItem[] } =
+          await api.get("conversations");
+
+        setChats(res.data);
+        if (chatId) {
+          const id = +chatId;
+          const chat = res.data.find(
+            (chat) => chat.last_message.conversation_id === id,
+          );
+          if (chat) {
+            dispatch(setChatPerson(chat));
+          }
+        }
+      };
+
+      getChats();
+    }
+  }, [userId]);
+
   const filteredChats = chats.filter(
     (chat) =>
-      chat.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      chat.message.toLowerCase().includes(debouncedSearch.toLowerCase()),
+      chat.conversation.username
+        .toLowerCase()
+        .includes(debouncedSearch.toLowerCase()) ||
+      chat.last_message.body
+        .toLowerCase()
+        .includes(debouncedSearch.toLowerCase()),
   );
 
   return (
-    <div className="h-screen flex">
-      {children}
-      <aside className="w-90 h-full bg-gray-300 border-r border-gray-200 flex flex-col">
+    <div className="flex h-screen">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setDrawerOpen(true)}
+        className="fixed top-4 left-4 z-40 rounded-md bg-white p-2 shadow md:hidden"
+      >
+        <Menu size={24} />
+      </button>
+
+      {/* Backdrop */}
+      {drawerOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 md:hidden"
+          onClick={() => setDrawerOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`
+          fixed left-0 top-0 z-50
+          h-screen w-90 bg-gray-300 border-r border-gray-200
+          transform transition-transform duration-300 ease-in-out
+          ${drawerOpen ? "translate-x-0" : "-translate-x-full"}
+
+          md:static
+          md:translate-x-0
+          md:flex
+          md:flex-col
+          md:w-90
+        `}
+      >
         {/* Header */}
-        <div className="px-5 py-4 border-b border-gray-200">
-          <div className="flex w-full justify-between">
+        <div className="border-b border-gray-200 px-5 py-4">
+          <div className="flex items-center justify-between">
             <ProfileImage />
             <h1 className="text-2xl font-bold text-gray-900">Chats</h1>
-            <BackwardBtn />
+
+            <div className="flex items-center gap-2">
+              {/* Close button on mobile */}
+              <button
+                className="text-2xl md:hidden"
+                onClick={() => setDrawerOpen(false)}
+              >
+                ✕
+              </button>
+
+              <div className="hidden md:block">
+                <BackwardBtn />
+              </div>
+            </div>
           </div>
 
           <SearchInput value={search} setValue={setSearch} />
         </div>
 
+        {/* Chat List */}
         <div className="flex-1 overflow-y-auto">
           {filteredChats.map((chat) => (
-            <ChatItem chat={chat} key={chat.id} />
+            <div
+              key={chat.conversation.id}
+              onClick={() => setDrawerOpen(false)}
+            >
+              <ChatItem chat={chat} />
+            </div>
           ))}
         </div>
       </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-hidden">{children}</main>
     </div>
   );
 }
