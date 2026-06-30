@@ -32,8 +32,11 @@ const chatSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
-    setChatPerson: (state, action: PayloadAction<ConversationItem>) => {
+    setChatPerson: (state, action: PayloadAction<ConversationItem | null>) => {
       state.chatPerson = action.payload;
+    },
+    clearChatInfo: (state) => {
+      state.chatInfo = null;
     },
   },
   extraReducers: (builder) => {
@@ -52,5 +55,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setChatPerson } = chatSlice.actions;
+export const { setChatPerson ,clearChatInfo } = chatSlice.actions;
 export default chatSlice.reducer;

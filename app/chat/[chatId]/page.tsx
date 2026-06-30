@@ -7,27 +7,6 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
 import { useEffect } from "react";
 import { getCoversationApi } from "@/store/featurs/chatSlice";
 
-const messages = [
-  {
-    id: 1,
-    sender: "other",
-    text: "Hey! How are you doing today?",
-    time: "10:20",
-  },
-  {
-    id: 2,
-    sender: "me",
-    text: "I'm great! What about you?",
-    time: "10:21",
-  },
-  {
-    id: 3,
-    sender: "other",
-    text: "Doing well 😊",
-    time: "10:22",
-  },
-];
-
 export default function page() {
   const router = useRouter();
   const params = useParams();

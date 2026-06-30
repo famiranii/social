@@ -1,14 +1,17 @@
-import { useAppDispatch } from "@/store/hooks/redux";
 import Image from "next/image";
-import {useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 type ChatItemProps = {
   chat: ConversationItem;
+  handleChatItemClicked: (id: number) => void;
 };
 
-export default function ChatItem({ chat }: ChatItemProps) {
-  const dispatch = useAppDispatch();
+export default function ChatItem({
+  chat,
+  handleChatItemClicked,
+}: ChatItemProps) {
   const router = useRouter();
   const chatItemClicked = () => {
+    handleChatItemClicked(chat.last_message.conversation_id);
     router.push("/chat/" + chat.last_message.conversation_id);
   };
   return (
@@ -46,7 +49,7 @@ export default function ChatItem({ chat }: ChatItemProps) {
 
       {!chat.last_message.seen_at && (
         <div className="flex items-center justify-center min-w-6 h-6 px-2 rounded-full bg-sky-500 text-white text-xs font-medium">
-          unread count
+          {chat.unreadCount}
         </div>
       )}
     </div>

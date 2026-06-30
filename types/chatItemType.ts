@@ -2,7 +2,7 @@ interface Conversation {
   id: number;
   username: string;
   email: string;
-  image: string;
+  image: string | null;
 }
 
 interface LastMessage {

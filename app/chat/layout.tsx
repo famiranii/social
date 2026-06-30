@@ -11,12 +11,15 @@ import ProfileImage from "./components/ProfileImage";
 import useDebounce from "../components/lib/useDebaounse";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
 import { api } from "../components/lib/api";
-import { useParams } from "next/navigation";
-import { setChatPerson } from "@/store/featurs/chatSlice";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { clearChatInfo, setChatPerson } from "@/store/featurs/chatSlice";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const chatId = params.chatId;
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.userInfo.userInfo.id);
 
@@ -41,6 +44,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             dispatch(setChatPerson(chat));
           }
         }
+        if (id) {
+          const chat = res.data.find(
+            (chat) => chat.conversation.id === +id,
+          );
+          if (chat) {
+            dispatch(setChatPerson(chat));
+            router.replace("/chat/" + chat.last_message.conversation_id);
+          } else {
+            dispatch(clearChatInfo());
+          }
+        }
       };
 
       getChats();
@@ -56,6 +70,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         .toLowerCase()
         .includes(debouncedSearch.toLowerCase()),
   );
+
+  const handleChatItemClicked = (id: number) => {
+    const chat = chats.find((chat) => chat.last_message.conversation_id === id);
+    if (chat) {
+      dispatch(setChatPerson(chat));
+    }
+  };
 
   return (
     <div className="flex h-screen">
@@ -121,7 +142,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               key={chat.conversation.id}
               onClick={() => setDrawerOpen(false)}
             >
-              <ChatItem chat={chat} />
+              <ChatItem
+                chat={chat}
+                handleChatItemClicked={handleChatItemClicked}
+              />
             </div>
           ))}
         </div>

@@ -112,7 +112,7 @@ export default function BiggerPersonalCard({ user }: { user: User }) {
           </button>
 
           <button className="h-12 w-12 rounded-full bg-blue-100 hover:bg-blue-200 transition flex items-center justify-center">
-            <ChatIconBtn />
+            <ChatIconBtn user={user}/>
           </button>
 
           <button className="h-12 w-12 rounded-full bg-yellow-100 hover:bg-yellow-200 transition flex items-center justify-center">
