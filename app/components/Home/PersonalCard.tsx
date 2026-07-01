@@ -42,7 +42,7 @@ export default function PersonalCard({ user }: { user: User }) {
         <div className="absolute top-2 flex items-center justify-center w-full ">
           <div className="gap-2 bg-gray-200/30 flex items-center rounded-full p-0.5">
             <RedHeartIcon />
-            <ChatIconBtn />
+            <ChatIconBtn user={user}/>
             <StarIcon />
           </div>
         </div>

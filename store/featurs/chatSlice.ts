@@ -2,13 +2,13 @@ import { api } from "@/app/components/lib/api";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ChatState {
-  chatInfo: SingleCahtType[] | null;
+  chatInfo: Record<number, SingleCahtType[]>;
   chatPerson: ConversationItem | null;
   status: string;
 }
 
 const initialState: ChatState = {
-  chatInfo: null,
+  chatInfo: {},
   status: "",
   chatPerson: null,
 };
@@ -35,18 +35,26 @@ const chatSlice = createSlice({
     setChatPerson: (state, action: PayloadAction<ConversationItem | null>) => {
       state.chatPerson = action.payload;
     },
-    clearChatInfo: (state) => {
-      state.chatInfo = null;
-    },
+    // clearChatInfo: (state) => {
+    //   state.chatInfo = null;
+    // },
   },
   extraReducers: (builder) => {
     builder
       .addCase(getCoversationApi.pending, (state) => {
         state.status = "loading";
       })
-
       .addCase(getCoversationApi.fulfilled, (state, action) => {
-        state.chatInfo = action.payload.data;
+        const { conv_id, paginate } = action.meta.arg;
+
+        if (paginate === 0) {
+          state.chatInfo[conv_id] = action.payload.data.reverse();
+        } else {
+          state.chatInfo[conv_id] = [
+            ...action.payload.data.reverse() ,
+            ...(state.chatInfo[conv_id] ?? []),
+          ];
+        }
       })
 
       .addCase(getCoversationApi.rejected, (state, action) => {
@@ -55,5 +63,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setChatPerson ,clearChatInfo } = chatSlice.actions;
+export const { setChatPerson } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 type ChatItemProps = {
   chat: ConversationItem;
   handleChatItemClicked: (id: number) => void;
@@ -10,13 +10,17 @@ export default function ChatItem({
   handleChatItemClicked,
 }: ChatItemProps) {
   const router = useRouter();
+  const params = useParams();
+  const id = Number(params.chatId ?? 0);
   const chatItemClicked = () => {
     handleChatItemClicked(chat.last_message.conversation_id);
     router.push("/chat/" + chat.last_message.conversation_id);
   };
   return (
     <div
-      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 cursor-pointer transition"
+      className={`flex items-center gap-3 px-4 py-3 hover:bg-gray-100 ${
+        id === chat.last_message.conversation_id ? "bg-gray-200" : ""
+      } cursor-pointer transition`}
       onClick={chatItemClicked}
     >
       <div className="relative">
@@ -47,7 +51,7 @@ export default function ChatItem({
         </p>
       </div>
 
-      {!chat.last_message.seen_at && (
+      {chat.unreadCount !== 0 && (
         <div className="flex items-center justify-center min-w-6 h-6 px-2 rounded-full bg-sky-500 text-white text-xs font-medium">
           {chat.unreadCount}
         </div>

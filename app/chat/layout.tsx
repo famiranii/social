@@ -12,7 +12,7 @@ import useDebounce from "../components/lib/useDebaounse";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
 import { api } from "../components/lib/api";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { clearChatInfo, setChatPerson } from "@/store/featurs/chatSlice";
+import {  setChatPerson } from "@/store/featurs/chatSlice";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const params = useParams();
@@ -22,7 +22,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.userInfo.userInfo.id);
-
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
 
@@ -45,14 +44,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           }
         }
         if (id) {
-          const chat = res.data.find(
-            (chat) => chat.conversation.id === +id,
-          );
+          const chat = res.data.find((chat) => chat.conversation.id === +id);
           if (chat) {
             dispatch(setChatPerson(chat));
             router.replace("/chat/" + chat.last_message.conversation_id);
           } else {
-            dispatch(clearChatInfo());
+            // dispatch(clearChatInfo());
           }
         }
       };
