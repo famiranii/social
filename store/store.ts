@@ -5,6 +5,7 @@ import countriesSlice from "./featurs/getCountriesSlice";
 import userInfoSlice from "./featurs/userInfoSlice";
 import usersSlice from "./featurs/getUsersSlice";
 import chatSlice from "./featurs/chatSlice";
+import imagesGallerySlice from "./featurs/imagesGallerySlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     userInfo: userInfoSlice,
     users: usersSlice,
     chats: chatSlice,
+    imagesGallery: imagesGallerySlice,
   },
 });
 

@@ -6,8 +6,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import ChatIconBtn from "../btns/ChatIconBtn";
 import { User } from "@/types/user";
+import { memo } from "react";
 
-export default function PersonalCard({ user }: { user: User }) {
+function PersonalCard({ user }: { user: User }) {
   const router = useRouter();
 
   const PersonalCardClicked = () => {
@@ -29,8 +30,9 @@ export default function PersonalCard({ user }: { user: User }) {
       >
         {/* IMAGE */}
         <Image
-          src="/images/random-image.jpg"
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL ?? ""}${user.image}`}
           alt="card"
+          loading="lazy"
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
@@ -42,7 +44,7 @@ export default function PersonalCard({ user }: { user: User }) {
         <div className="absolute top-2 flex items-center justify-center w-full ">
           <div className="gap-2 bg-gray-200/30 flex items-center rounded-full p-0.5">
             <RedHeartIcon />
-            <ChatIconBtn user={user}/>
+            <ChatIconBtn user={user} />
             <StarIcon />
           </div>
         </div>
@@ -73,3 +75,5 @@ export default function PersonalCard({ user }: { user: User }) {
     </div>
   );
 }
+
+export default memo(PersonalCard);

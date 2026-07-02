@@ -5,11 +5,15 @@ import ImageCard from "./ImageCard";
 import { api } from "@/app/components/lib/api";
 import { useParams } from "next/navigation";
 import { User } from "@/types/user";
+import { UserImage } from "@/types/userImage";
+import { useAppDispatch } from "@/store/hooks/redux";
+import { setImagesGallery } from "@/store/featurs/imagesGallerySlice";
 
 export default function PersonalGallery() {
   const params = useParams();
+  const dispatch = useAppDispatch();
   const userId = params.id;
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<UserImage[]>([]);
   const [userInfo, setUserInfo] = useState<User>({
     id: 0,
     username: "",
@@ -35,6 +39,7 @@ export default function PersonalGallery() {
           user_id: userId,
         });
         setImages(response.data);
+        dispatch(setImagesGallery(response.data));
       } catch (error) {}
     };
     const getUserInfo = async () => {
@@ -49,11 +54,12 @@ export default function PersonalGallery() {
     getImages();
     getUserInfo();
   }, []);
+  console.log(images[1]);
 
   return (
     <div className="md:h-[calc(100vh-72px)] flex flex-col md:flex-row items-center px-8 md:gap-20">
       <div>
-        <BiggerPersonalCard user={userInfo} />
+        <BiggerPersonalCard user={userInfo} image={images[1]?.image} />
       </div>
 
       <div className="h-full flex-1 py-8">

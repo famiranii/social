@@ -9,7 +9,15 @@ const AddPostBtn = dynamic(() => import("./AddPostBtn"), {
   ssr: false,
 });
 
-export default function BiggerPersonalCard({ user }: { user: User }) {
+export default function BiggerPersonalCard({
+  user,
+  image,
+}: {
+  user: User;
+  image: string;
+}) {
+  console.log(image);
+
   return (
     <div
       className="
@@ -29,11 +37,7 @@ export default function BiggerPersonalCard({ user }: { user: User }) {
       {/* Cover */}
       <div className="relative h-56">
         <Image
-          src={
-            user?.image
-              ? process.env.NEXT_PUBLIC_IMAGE_URL + user.image
-              : "/images/random-image.jpg"
-          }
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL ?? ""}${user.image}`}
           alt="profile"
           fill
           className="object-cover"
@@ -45,11 +49,7 @@ export default function BiggerPersonalCard({ user }: { user: User }) {
         <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
           <div className="relative h-24 w-24 rounded-full overflow-hidden border-4 border-white shadow-lg">
             <Image
-              src={
-                user?.image
-                  ? process.env.NEXT_PUBLIC_IMAGE_URL + user.image
-                  : "/images/random-image.jpg"
-              }
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL ?? ""}${image}`}
               alt="avatar"
               fill
               className="object-cover"

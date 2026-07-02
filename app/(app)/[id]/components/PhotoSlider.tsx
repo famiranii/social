@@ -6,13 +6,12 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const images = Array.from({ length: 20 }, () => `/images/random-image.jpg`);
-
 export default function PhotoSlider() {
   const isOpen = useAppSelector(
     (state) =>
       state.ui.modals.find((m) => m.modalName === "photo-slider")?.isOpen,
   );
+  const images = useAppSelector((state) => state.imagesGallery.images);
 
   const dispatch = useAppDispatch();
 
@@ -73,11 +72,16 @@ export default function PhotoSlider() {
           className="absolute left-10 top-10 border rounded-full p-2 hover:border-gray-400 hover:text-gray-400"
           onClick={close}
         >
-          <BackwardIcon prop={{width:60}}/>
+          <BackwardIcon prop={{ width: 60 }} />
         </button>
 
         <div className="relative w-full h-90 rounded-2xl overflow-hidden bg-black">
-          <Image src={images[index]} alt="main" fill className="object-cover" />
+          <Image
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL ?? ""}${images[index].image}`}
+            alt="main"
+            fill
+            className="object-cover"
+          />
         </div>
 
         <div className="mt-4 flex items-center justify-between">
@@ -100,7 +104,12 @@ export default function PhotoSlider() {
                     realIndex === index ? "border-white" : "border-transparent"
                   }`}
                 >
-                  <Image src={img} alt="thumb" fill className="object-cover" />
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL ?? ""}${img.image}`}
+                    alt="thumb"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               );
             })}
