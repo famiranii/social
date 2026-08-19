@@ -14,12 +14,12 @@ export default function ProfileImage() {
             fill
             className="rounded-full object-cover"
           />
-          <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white" />
+          {/* <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white" /> */}
         </div>
       ) : (
         <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white font-bold text-sm">
           {userInfo?.first_name?.[0] ?? "?"}
-          <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white" />
+          {/* <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white" /> */}
         </div>
       )}
     </Link>

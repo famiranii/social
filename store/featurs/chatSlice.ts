@@ -29,7 +29,7 @@ export const getCoversationApi = createAsyncThunk(
     }
   },
 );
-export const getCoversationsApi = createAsyncThunk(
+export const getConversationsApi = createAsyncThunk(
   "chat/getConvs",
   async (_, thunkAPI) => {
     try {
@@ -166,14 +166,14 @@ const chatSlice = createSlice({
       .addCase(getCoversationApi.rejected, (state, action) => {
         state.status = "failed";
       })
-      .addCase(getCoversationsApi.pending, (state) => {
+      .addCase(getConversationsApi.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getCoversationsApi.fulfilled, (state, action) => {
+      .addCase(getConversationsApi.fulfilled, (state, action) => {
         state.chat = action.payload.data;
       })
 
-      .addCase(getCoversationsApi.rejected, (state, action) => {
+      .addCase(getConversationsApi.rejected, (state, action) => {
         state.status = "failed";
       })
       .addCase(deleteChatApi.pending, (state) => {

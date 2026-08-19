@@ -85,7 +85,7 @@ export default function ChatItem({
               : "Chat"}
           </div>
         )}
-        <span className="absolute bottom-1 right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
+        {/* <span className="absolute bottom-1 right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span> */}
       </div>
 
       <div className="flex-1 min-w-0">

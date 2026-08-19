@@ -28,9 +28,12 @@ export default function WebSocket() {
   const clientRef = useRef<Client | null>(null);
 
   useEffect(() => {
-    const client = new Client({
-      brokerURL: "ws://195.181.41.139:15674/ws",
+    if (!id) return;
+    const brokeL = process.env.NEXT_PUBLIC_STOMP_URL;
+    console.log(brokeL);
 
+    const client = new Client({
+      brokerURL: process.env.NEXT_PUBLIC_STOMP_URL,
       connectHeaders: {
         login: "websocket",
         passcode: "123456",
@@ -49,14 +52,25 @@ export default function WebSocket() {
       console.error("WebSocket error:", event);
     };
 
-    client.onWebSocketClose = (event) => {
+    client.onStompError = (frame) => {
+      console.error("[STOMP] Broker error:", frame.headers["message"]);
+      console.error("[STOMP] Body:", frame.body);
     };
+
+
+    client.onWebSocketClose = (event) => {
+      console.warn("[WS] WebSocket closed:", event.code, event.reason);
+    };
+
     client.onConnect = () => {
+      console.log("[STOMP] Connected successfully");
       client.subscribe("/exchange/events/user." + id, (message) => {
         const payload = JSON.parse(message.body);
+        console.log("[STOMP] Received event:", payload.event, payload);
 
         if (payload.event === "message.created") {
-          const data = JSON.parse(message.body).data;
+          console.log("[STOMP] message.created:", payload.data);
+          const data = payload.data;
           dispatch(addToChatWithWbSocket(data));
           if (
             currentChatIdRef.current &&
@@ -67,19 +81,28 @@ export default function WebSocket() {
           }
         }
         if (payload.event === "chat.created") {
-          const data = JSON.parse(message.body).data;
-          dispatch(addNewChatToChats(data));
+          console.log("[STOMP] chat.created:", payload.data);
+          dispatch(addNewChatToChats(payload.data));
         } else if (payload.event === "message.read") {
-          const seen_at = JSON.parse(message.body).data.seen_at;
-          const id = JSON.parse(message.body).data.conv_id;
-          dispatch(seenMessageHandler({ id, seenAt: seen_at }));
+          console.log("[STOMP] message.read:", payload.data);
+          dispatch(
+            seenMessageHandler({
+              id: payload.data.conv_id,
+              seenAt: payload.data.seen_at,
+            }),
+          );
         } else if (payload.event === "message.deleted") {
-          const { message_id, conv_id } = JSON.parse(message.body).data;
-          dispatch(deleteMessageWithWebsocket({ id: message_id, conv_id }));
+          console.log("[STOMP] message.deleted:", payload.data);
+          dispatch(
+            deleteMessageWithWebsocket({
+              id: payload.data.message_id,
+              conv_id: payload.data.conv_id,
+            }),
+          );
         } else if (payload.event === "chat.deleted") {
-          const { conv_id } = JSON.parse(message.body).data;
-          dispatch(deleteChatWithWebsocket(conv_id));
-          if (currentChatIdRef.current === conv_id) {
+          console.log("[STOMP] chat.deleted:", payload.data);
+          dispatch(deleteChatWithWebsocket(payload.data.conv_id));
+          if (currentChatIdRef.current === payload.data.conv_id) {
             router.push("/chat");
           }
         }

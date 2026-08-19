@@ -183,13 +183,13 @@ export default function Page() {
                 {chatPerson?.conversation?.username[0]}
               </div>
             )}
-            <span className="absolute bottom-1 right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
+            {/* <span className="absolute bottom-1 right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span> */}
           </div>
           <div>
             <h2 className="font-semibold text-gray-900">
               {chatPerson?.conversation?.username}
             </h2>
-            <p className="text-sm text-green-500">Online</p>
+            {/* <p className="text-sm text-green-500">Online</p> */}
           </div>
         </div>
         <div>
