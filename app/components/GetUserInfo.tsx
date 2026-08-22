@@ -20,7 +20,7 @@ export default function GetUserInfo() {
 
     const token = Cookies.get("token");
 
-    if (!token) return;
+    // if (!token) return;
 
     const cookieId = Cookies.get("id")
       ? Number(Cookies.get("id"))

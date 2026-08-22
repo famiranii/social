@@ -83,8 +83,7 @@ function ChatLayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen">
-      {userId && <WebSocket />}
-
+      {userId !== null && userId !== 0 && <WebSocket />}
       {drawerOpen?.isOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/40 md:hidden"

@@ -29,7 +29,7 @@ export default function WebSocket() {
 
   useEffect(() => {
     console.log("run websocket");
-
+    console.log(id);
     if (!id) return;
 
     console.log("run websocket after id");
@@ -66,7 +66,7 @@ export default function WebSocket() {
     client.onWebSocketClose = (event) => {
       console.warn("[WS] WebSocket closed:", event.code, event.reason);
     };
-    console.log("3 websocket")
+    console.log("3 websocket");
 
     client.onConnect = () => {
       console.log("[STOMP] Connected successfully");
