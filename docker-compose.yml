@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_STOMP_URL: ws://195.181.41.139/ws
+        NEXT_PUBLIC_STOMP_URL: wss://195.181.41.139/ws
         NEXT_PUBLIC_API_URL: https://195.181.41.139/api/
         NEXT_PUBLIC_IMAGE_URL: https://195.181.41.139/storage/
         NEXT_PUBLIC_BASE_URL: https://195.181.41.139/

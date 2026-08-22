@@ -28,8 +28,14 @@ export default function WebSocket() {
   const clientRef = useRef<Client | null>(null);
 
   useEffect(() => {
+    console.log("run websocket");
+
     if (!id) return;
+
+    console.log("run websocket after id");
+
     const brokeL = process.env.NEXT_PUBLIC_STOMP_URL;
+
     console.log(brokeL);
 
     const client = new Client({
@@ -57,10 +63,10 @@ export default function WebSocket() {
       console.error("[STOMP] Body:", frame.body);
     };
 
-
     client.onWebSocketClose = (event) => {
       console.warn("[WS] WebSocket closed:", event.code, event.reason);
     };
+    console.log("3 websocket")
 
     client.onConnect = () => {
       console.log("[STOMP] Connected successfully");
