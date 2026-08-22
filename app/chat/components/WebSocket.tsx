@@ -17,7 +17,7 @@ export default function WebSocket() {
   const router = useRouter();
   const person = useAppSelector((state) => state.userInfo.userInfo);
   const params = useParams();
-  const id = person.id;
+  const id = person?.id;
   const currentChatId = params.chatId;
   const currentChatIdRef = useRef(currentChatId && +currentChatId);
 
