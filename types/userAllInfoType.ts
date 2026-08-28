@@ -19,8 +19,8 @@ export type UserAllInfo = {
   sex: string;
 
   ip: string | null;
-  lat: number | null;
-  lon: number | null;
+  lat: string;
+  lon: string;
 
   hobbies: string[];
 

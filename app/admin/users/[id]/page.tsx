@@ -4,14 +4,19 @@ import Link from "next/link";
 import Report from "../../components/Report";
 import { useEffect, useState } from "react";
 import { api } from "@/app/components/lib/api";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { UserAllInfo } from "@/types/userAllInfoType";
 import Connections from "../../components/Connections";
+import { useAppDispatch } from "@/store/hooks/redux";
+import { setMapUser } from "@/store/featurs/adminActionsSlice";
+import { userInfo } from "os";
 
 export default function AdminUserDetailPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const username = searchParams.get("username");
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const [info, setInfo] = useState<UserAllInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,6 +51,19 @@ export default function AdminUserDetailPage() {
       fetchUser();
     }
   }, [params.id]);
+  const handleInfoclicked = (label: string) => {
+    if (info) {
+      router.push("/admin/map");
+      dispatch(
+        setMapUser({
+          name: info?.username,
+          lat: +info.lat,
+          lng: +info?.lon,
+          avatar: info?.username,
+        }),
+      );
+    }
+  };
 
   if (loading) {
     return (
@@ -162,25 +180,37 @@ export default function AdminUserDetailPage() {
                       label: "Location",
                       value: `${info.city}, ${info.country}`,
                     },
+                    {
+                      icon: "🌐",
+                      label: "Coordinates",
+                      value: `${info.lon}, ${info.lat}`,
+                    },
                   ].map(({ icon, label, value, accent }) => (
-                    <div key={label} className="flex items-start gap-3">
-                      <span className="mt-0.5 text-base text-slate-400">
-                        {icon}
-                      </span>
+                    <div key={label} className="flex justify-between">
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 text-base text-slate-400">
+                          {icon}
+                        </span>
 
-                      <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
-                          {label}
-                        </p>
+                        <div>
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                            {label}
+                          </p>
 
-                        <p
-                          className={`mt-0.5 text-sm font-medium ${
-                            accent ? "text-indigo-600" : "text-slate-700"
-                          }`}
-                        >
-                          {value}
-                        </p>
+                          <p
+                            className={`mt-0.5 text-sm font-medium ${
+                              accent ? "text-indigo-600" : "text-slate-700"
+                            }`}
+                          >
+                            {value}
+                          </p>
+                        </div>
                       </div>
+                      {label === "Coordinates" && (
+                        <button className="bg-blue-400 p-2 rounded-2xl" onClick={() => handleInfoclicked(label)}>
+                          Show on the map{" "}
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>

@@ -6,6 +6,7 @@ import userInfoSlice from "./featurs/userInfoSlice";
 import usersSlice from "./featurs/getUsersSlice";
 import chatSlice from "./featurs/chatSlice";
 import userActionsSlice from "./featurs/userActionsSlice";
+import adminSlice from "./featurs/adminActionsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     users: usersSlice,
     chats: chatSlice,
     userAction: userActionsSlice,
+    admin: adminSlice,
   },
 });
 

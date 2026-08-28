@@ -11,6 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const navigation = [
     { label: "Dashboard", icon: "⊞", href: "/admin" },
     { label: "Clients", icon: "👥", href: "/admin/users" },
+    { label: "map", icon: "👥", href: "/admin/map" },
   ];
 
   return (
