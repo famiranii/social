@@ -93,7 +93,7 @@ function ChatLayoutContent({ children }: { children: React.ReactNode }) {
 
       <aside
         className={`
-          fixed left-0 top-0 z-40
+          fixed flex flex-col left-0 top-0 z-40
           h-screen w-90 bg-gray-300 border-r border-gray-200
           transform transition-transform duration-300 ease-in-out
           ${drawerOpen?.isOpen ? "translate-x-0" : "-translate-x-full"}
@@ -108,9 +108,14 @@ function ChatLayoutContent({ children }: { children: React.ReactNode }) {
 
         <div className="border-b border-gray-200 px-5 py-4">
           <div className="flex items-center justify-between">
-            <ProfileImage />
+            <div className="flex items-center w-1/3">
+              <div className="rotate-180 md:hidden">
+                <BackwardBtn />
+              </div>
+              <ProfileImage />
+            </div>
 
-            <h1 className="text-2xl font-bold text-gray-900">Chats</h1>
+            <h1 className="text-2xl font-bold text-gray-900 w-1/3">Chats</h1>
 
             <div className="flex items-center gap-2">
               <button
@@ -129,7 +134,7 @@ function ChatLayoutContent({ children }: { children: React.ReactNode }) {
           <SearchInput value={search} setValue={setSearch} />
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-scroll">
           {filteredChats?.map((chat, index) => (
             <div key={index} onClick={() => dispatch(closeModal("drawer"))}>
               <ChatItem

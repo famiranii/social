@@ -18,6 +18,7 @@ import { getCountriesApi } from "@/store/featurs/getCountriesSlice";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import LogoutButton from "../components/Logout";
+import BackwardBtn from "../chat/components/BackwardIBtn";
 
 export default function Page() {
   const countries = useAppSelector((state) => state.countries.countries);
@@ -162,6 +163,9 @@ export default function Page() {
     <div className="h-screen flex justify-center items-center py-3">
       <div className="w-full h-full max-w-xl flex flex-col justify-center  overflow-y-auto backdrop-blur-2xl bg-amber-50/15 rounded-2xl shadow md:p-">
         {/* Profile Photo */}
+        <div className="rotate-180 w-15 ">
+          <BackwardBtn />
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center gap-4 mb-8">
             <label className="relative cursor-pointer">

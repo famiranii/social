@@ -34,16 +34,22 @@ export default function ChatItem({
     setOpenChatActions(true);
     dispatch(handleDropdownsOpen(true));
   };
-  const handleDropdownAction = (name: string) => {
-    switch (name) {
-      case "Delete":
-        dispatch(deleteChatApi(chat.last_message.conversation_id));
-        dispatch(handleDropdownsOpen(false));
+  const handleDropdownAction = async (name: string) => {
+    if (name !== "Delete") return;
 
-        break;
+    const conversationId = chat.last_message.conversation_id;
+    const isCurrentChat = Number(params.chatId) === Number(conversationId);
 
-      default:
-        break;
+    try {
+      await dispatch(deleteChatApi(conversationId)).unwrap();
+
+      dispatch(handleDropdownsOpen(false));
+
+      if (isCurrentChat) {
+        router.replace("/chat");
+      }
+    } catch (error) {
+      console.error("Delete chat failed:", error);
     }
   };
 
@@ -91,7 +97,7 @@ export default function ChatItem({
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-center">
           <h3 className="font-semibold text-gray-900 truncate">
-            {chat.conversation.username}
+            @{chat.conversation.username}
           </h3>
 
           <span className="text-xs text-gray-500">

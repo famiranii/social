@@ -1,6 +1,14 @@
+"use client";
+import { useAppDispatch } from "@/store/hooks/redux";
 import DrawerBtn from "./components/DrawerBtn";
+import { useEffect } from "react";
+import { openModal } from "@/store/featurs/uiSlice";
 
 export default function Page() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(openModal("drawer"));
+  }, []);
   return (
     <div className="flex-1 h-full flex flex-col">
       {/* Header */}

@@ -16,8 +16,7 @@ type InvitedUserProps = {
 export default function InvitedUser({ users, id }: InvitedUserProps) {
   const [copied, setCopied] = useState(false);
 
-  const inviteLink = `${process.env.NEXT_PUBLIC_FRONT_API_URL}?code=${id}`;
-
+  const inviteLink = `${window.location.origin}/sign-up?code=${id}`;
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(inviteLink);
@@ -43,40 +42,40 @@ export default function InvitedUser({ users, id }: InvitedUserProps) {
       </div>
 
       <div className="rounded-xl border border-white/10 bg-slate-900 p-5">
-        {users.length > 0 ? (
-          <div className="space-y-3">
-            {/* Invite Link */}
-            <div className="rounded-lg border border-white/5 bg-white/[0.02] px-4 py-3 transition-colors hover:bg-white/[0.05]">
-              <p className="mb-2 text-sm text-slate-400">Your invite link</p>
+        <div className="space-y-3">
+          {/* Invite Link */}
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] px-4 py-3 transition-colors hover:bg-white/[0.05]">
+            <p className="mb-2 text-sm text-slate-400">Your invite link</p>
 
-              <div className="flex items-center gap-3">
-                <p className="min-w-0 flex-1 truncate text-sm text-slate-200">
-                  {inviteLink}
-                </p>
+            <div className="flex items-center gap-3">
+              <p className="min-w-0 flex-1 truncate text-sm text-slate-200">
+                {inviteLink}
+              </p>
 
-                <div className="group relative shrink-0">
-                  <button
-                    type="button"
-                    onClick={handleCopy}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 transition-all duration-200 hover:border-indigo-500/30 hover:bg-indigo-500/10 hover:text-indigo-400 active:scale-95"
-                    aria-label="Copy invite link"
-                  >
-                    {copied ? (
-                      <Check size={18} className="text-emerald-400" />
-                    ) : (
-                      <CopyIcon size={18} />
-                    )}
-                  </button>
+              <div className="group relative shrink-0">
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 transition-all duration-200 hover:border-indigo-500/30 hover:bg-indigo-500/10 hover:text-indigo-400 active:scale-95"
+                  aria-label="Copy invite link"
+                >
+                  {copied ? (
+                    <Check size={18} className="text-emerald-400" />
+                  ) : (
+                    <CopyIcon size={18} />
+                  )}
+                </button>
 
-                  <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                    Copy
-                  </span>
-                </div>
+                <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  Copy
+                </span>
               </div>
             </div>
+          </div>
 
-            {/* Invited Users */}
-            {users.map((user) => (
+          {/* Invited Users */}
+          {users.length > 0 ? (
+            users.map((user) => (
               <div
                 key={user.id}
                 className="flex items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] px-4 py-3 transition-colors hover:bg-white/[0.05]"
@@ -97,13 +96,13 @@ export default function InvitedUser({ users, id }: InvitedUserProps) {
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="py-8 text-center text-sm text-slate-500">
-            No invited users found.
-          </div>
-        )}
+            ))
+          ) : (
+            <div className="py-8 text-center text-sm text-slate-500">
+              No invited users found.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

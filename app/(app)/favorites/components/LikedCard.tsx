@@ -1,5 +1,5 @@
+import ChatIconBtn from "@/app/components/btns/ChatIconBtn";
 import { User } from "@/types/user";
-import { MessageSquareIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -90,22 +90,17 @@ export default function LikedCard({
         </p>
         <div className="flex gap-2">
           <Link
-            href={`/${user.id}`}
-            className="flex-1 text-center py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-95"
+            href={`/users/${user.id}`}
+            className="flex-1 flex justify-center items-center text-center py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-95"
             style={{
               background: "linear-gradient(135deg,#6366f1,#818CF8)",
             }}
           >
             View profile
           </Link>
-
-          <Link
-            href={`/chat?id=${user.id}`}
-            className="w-9 h-9 rounded-xl border border-indigo-500/25 bg-indigo-500/10 flex items-center justify-center text-indigo-300 hover:bg-indigo-500/20 transition-colors shrink-0"
-            title="Message"
-          >
-            <MessageSquareIcon width={18} />
-          </Link>
+          <div className="flex items-center justify-center w-11 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/40 hover:bg-indigo-500/30 transition-all duration-200">
+            <ChatIconBtn user={user} />
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/hooks/redux";
 import { logout } from "@/store/featurs/authSlice";
@@ -9,12 +10,7 @@ export default function LogoutButton() {
   const router = useRouter();
 
   const handleLogout = () => {
-    // حذف token از cookie
-
-    // پاک کردن اطلاعات auth از Redux
     dispatch(logout());
-
-    // انتقال به login
     router.replace("/login");
   };
 
@@ -22,9 +18,42 @@ export default function LogoutButton() {
     <button
       type="button"
       onClick={handleLogout}
-      className="w-full py-3 rounded-xl font-medium text-red-500 border border-red-500 hover:bg-red-500 hover:text-white transition"
+      className="
+        group
+        flex
+        w-full
+        items-center
+        justify-center
+        gap-2.5
+        rounded-2xl
+        border
+        border-rose-500/20
+        bg-rose-500/5
+        px-4
+        py-3
+        text-sm
+        font-semibold
+        text-rose-400
+        shadow-sm
+        transition-all
+        duration-200
+        hover:border-rose-500/40
+        hover:bg-rose-500/10
+        hover:text-rose-300
+        active:scale-[0.98]
+      "
     >
-      Logout
+      <LogOut
+        size={18}
+        strokeWidth={2}
+        className="
+          transition-transform
+          duration-200
+          group-hover:-translate-x-0.5
+        "
+      />
+
+      <span>Logout</span>
     </button>
   );
 }

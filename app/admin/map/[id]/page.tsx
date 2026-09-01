@@ -1,40 +1,53 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import UserLocationMapWrapper from "../components/UserLocationMap";
+import UserLocationMapWrapper from "../../components/UserLocationMap";
 import { api } from "@/app/components/lib/api";
 import { MapUser } from "@/types/mapUserType";
 
 type UserLocationsResponse = {
-  data: {
+  user: {
     username: string;
-    image: string;
-    location: string;
-  }[];
+  };
+  locations: { location: string }[];
+  profile: { image: string };
 };
 
 export default function Page() {
+  const params = useParams();
+  const id = params.id;
+
   const [mapUserInfo, setMapUserInfo] = useState<MapUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [isLocations, setIsLocation] = useState(true);
 
   useEffect(() => {
+    if (!id) return;
+
     const getUserLocation = async () => {
       try {
         setLoading(true);
 
-        const response = await api.get<UserLocationsResponse>("locations");
-        console.log(response);
-
-        const UserLocations = response.data.map((loc) => {
+        const response = await api.post<UserLocationsResponse>(
+          "user/locations",
+          {
+            id: Number(id),
+          },
+        );
+        if (response.locations.length === 0) {
+          setIsLocation(false);
+          return;
+        }
+        const UserLocations = response.locations.map((loc) => {
           const [lat, lng] = loc.location
             .trim()
             .split(",")
             .map((value) => Number(value.trim()));
 
           return {
-            name: loc.username,
-            avatar: `${process.env.NEXT_PUBLIC_IMAGE_URL}${loc.image}`,
+            name: response.user.username,
+            avatar: `${process.env.NEXT_PUBLIC_IMAGE_URL}${response.profile.image}`,
             lat,
             lng,
           };
@@ -50,7 +63,7 @@ export default function Page() {
     };
 
     getUserLocation();
-  }, []);
+  }, [id]);
 
   if (loading) {
     return (

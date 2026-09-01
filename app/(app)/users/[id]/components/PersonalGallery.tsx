@@ -3,11 +3,7 @@
 import { useEffect, useState } from "react";
 import BiggerPersonalCard from "./BiggerPersonalCard";
 import ImageCard from "./ImageCard";
-import {
-  useParams,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
 import Loading from "@/app/components/Loading";
 import { getSingleUserInfoApi } from "@/store/featurs/getUsersSlice";
@@ -25,6 +21,7 @@ export default function PersonalGallery() {
   const status = useAppSelector((state) => state.users.status);
   const userInfo = useAppSelector((state) => state.users.singleUser);
   const images = useAppSelector((state) => state.users.images);
+  const image = useAppSelector((state) => state.userInfo.userInfo.image) || "";
 
   const [loading, setLoading] = useState(true);
 
@@ -82,7 +79,7 @@ export default function PersonalGallery() {
         <BiggerPersonalCard
           user={userInfo}
           image={images[0]?.image}
-          profileImage={images[1]?.image}
+          profileImage={image}
         />
       </div>
 

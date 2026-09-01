@@ -6,7 +6,10 @@ import Link from "next/link";
 import Loading from "@/app/components/Loading";
 import { saveUserApi } from "@/store/featurs/userActionsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
-import { getFilteredUsersApi } from "@/store/featurs/getUsersSlice";
+import {
+  getFilteredUsersApi,
+  removeUserById,
+} from "@/store/featurs/getUsersSlice";
 import LikedCard from "./components/LikedCard";
 
 export default function Page() {
@@ -69,7 +72,11 @@ export default function Page() {
   }, [dispatch, page, status, hasMore]);
 
   const handleUnSave = async (userId: number) => {
-    await dispatch(saveUserApi(userId));
+    await dispatch(saveUserApi(userId))
+      .unwrap()
+      .then(() => {
+        dispatch(removeUserById(userId));
+      });
   };
 
   if (loading) {

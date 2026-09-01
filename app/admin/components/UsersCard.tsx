@@ -62,10 +62,10 @@ function UsersCard({ user }: { user: User }) {
           </div>
 
           {/* Status */}
-          <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-medium text-emerald-400">
+          {/* <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-medium text-emerald-400">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             Active
-          </span>
+          </span> */}
         </div>
 
         {/* User information */}

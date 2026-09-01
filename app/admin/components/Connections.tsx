@@ -45,7 +45,7 @@ export default function Connections({ info }: { info: UserAllInfo }) {
   const followingCount = connections?.following?.length ?? 0;
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white">
+    <div className="rounded-xl border border-slate-200 bg-white max-h-50">
       <div className="border-b border-slate-100 px-4 py-3">
         <h3 className="text-sm font-semibold text-slate-800">Connections</h3>
       </div>

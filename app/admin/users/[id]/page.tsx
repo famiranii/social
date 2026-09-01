@@ -8,8 +8,6 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { UserAllInfo } from "@/types/userAllInfoType";
 import Connections from "../../components/Connections";
 import { useAppDispatch } from "@/store/hooks/redux";
-import { setMapUser } from "@/store/featurs/adminActionsSlice";
-import { userInfo } from "os";
 
 export default function AdminUserDetailPage() {
   const params = useParams();
@@ -53,15 +51,7 @@ export default function AdminUserDetailPage() {
   }, [params.id]);
   const handleInfoclicked = (label: string) => {
     if (info) {
-      router.push("/admin/map");
-      dispatch(
-        setMapUser({
-          name: info?.username,
-          lat: +info.lat,
-          lng: +info?.lon,
-          avatar: info?.username,
-        }),
-      );
+      router.push(`/admin/map/${info.id}`);
     }
   };
 
@@ -183,7 +173,7 @@ export default function AdminUserDetailPage() {
                     {
                       icon: "🌐",
                       label: "Coordinates",
-                      value: `${info.lon}, ${info.lat}`,
+                      value: `${info.location}`,
                     },
                   ].map(({ icon, label, value, accent }) => (
                     <div key={label} className="flex justify-between">

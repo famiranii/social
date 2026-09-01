@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Smile, Send } from "lucide-react";
 import { api } from "@/app/components/lib/api";
@@ -18,39 +18,71 @@ export default function SendMessageInput() {
   const id = searchParams.get("id");
 
   const chatPerson = useAppSelector((state) => state.chats.chatPerson);
+
   const [message, setMessage] = useState("");
   const [showPicker, setShowPicker] = useState(false);
 
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        pickerRef.current &&
+        !pickerRef.current.contains(event.target as Node)
+      ) {
+        setShowPicker(false);
+      }
+    };
+
+    if (showPicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showPicker]);
+
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setMessage((prev) => prev + emojiData.emoji);
-    setShowPicker(false);
   };
 
   const handleSend = async () => {
     const body = message.trim();
+
     if (!body) return;
-    const res: { data: ConversationItem; last_message: SingleCahtType } = await api.post(
-      "send/message",
-      {
+
+    try {
+      const res: {
+        data: ConversationItem;
+        last_message?: SingleCahtType;
+      } = await api.post("send/message", {
         receiver: id ?? chatPerson?.conversation.id,
         body,
-      },
-    );
-    if (id) {
-      dispatch(addNewChatToChats(res.data));
-      router.push("/chat/" + res.data.last_message.conversation_id);
-    } else {
-      dispatch(addnewMessageToMessage(res.last_message));
-    }
+      });
 
-    setMessage("");
+      console.log("SEND MESSAGE RESPONSE:", res);
+
+      if (id) {
+        dispatch(addNewChatToChats(res.data));
+
+        if (res.last_message?.conversation_id) {
+          router.push("/chat/" + res.last_message.conversation_id);
+        }
+      } else if (res.last_message) {
+        dispatch(addnewMessageToMessage(res.last_message));
+      }
+
+      setMessage("");
+    } catch (error) {
+      console.error("send message error:", error);
+    }
   };
 
   return (
-    <div className="relative bg-white border-t p-4">
-      {/* Emoji Picker */}
+    <div className="relative border-t bg-white p-4">
       {showPicker && (
-        <div className="absolute bottom-20 left-4 z-50">
+        <div ref={pickerRef} className="absolute bottom-20 left-4 z-50">
           <EmojiPicker
             onEmojiClick={handleEmojiClick}
             width={320}

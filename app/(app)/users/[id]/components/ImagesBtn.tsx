@@ -6,7 +6,6 @@ import { handleRemoveImage } from "@/store/featurs/getUsersSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
 export default function ImagesBtn({ image }: { image: string }) {
@@ -64,11 +63,11 @@ export default function ImagesBtn({ image }: { image: string }) {
   };
 
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
       <EllipsisDropdown
         options={["delete", "set as profile"]}
         handleClicked={imageActionHandler}
       />
-    </>
+    </div>
   );
 }

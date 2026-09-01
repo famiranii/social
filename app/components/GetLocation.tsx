@@ -12,41 +12,55 @@ const GEO_OPTIONS: PositionOptions = {
 
 export default function GetLocation() {
   const id = useAppSelector((state) => state.userInfo.userInfo?.id);
-  const hasGeo = typeof navigator !== "undefined" && !!navigator.geolocation;
+
+  const hasGeo =
+    typeof navigator !== "undefined" && !!navigator.geolocation;
 
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(hasGeo); // true only if we'll attempt
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const attempted = useRef(false);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
-    return () => { document.body.style.overflow = "auto"; };
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [open]);
 
-  const sendLocation = async (pos: GeolocationPosition) => {
-    await api.post("info", {
-      user_id: id,
-      lat: pos.coords.latitude,
-      lon: pos.coords.longitude,
+  const sendLocation = async (
+    pos: GeolocationPosition,
+    userId: string | number,
+  ) => {
+    await api.post("insert/locations", {
+      user_id: userId,
+      location: `${pos.coords.latitude},${pos.coords.longitude}`,
     });
   };
 
   useEffect(() => {
-    if (attempted.current || !hasGeo) {
-      if (!hasGeo) setOpen(true);
+    if (!id || attempted.current) {
       return;
     }
+
+    if (!hasGeo) {
+      setOpen(true);
+      return;
+    }
+
     attempted.current = true;
+    setLoading(true);
 
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
-          await sendLocation(pos);
-        } catch {
-          // ignore server error on silent attempt
-        } finally {
+          await sendLocation(pos, id);
           setOpen(false);
+        } catch {
+          setOpen(false);
+        } finally {
           setLoading(false);
         }
       },
@@ -56,16 +70,26 @@ export default function GetLocation() {
       },
       GEO_OPTIONS,
     );
-  }, []);
+  }, [id, hasGeo]);
 
   const requestLocation = () => {
+    if (!id) {
+      setError("User information is not ready yet. Please try again.");
+      return;
+    }
+
+    if (!hasGeo) {
+      setError("Geolocation is not supported by this browser.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
-          await sendLocation(pos);
+          await sendLocation(pos, id);
           setOpen(false);
         } catch {
           setError("Failed to save location. Please try again.");
@@ -75,8 +99,11 @@ export default function GetLocation() {
       },
       (err) => {
         setLoading(false);
+
         if (err.code === err.PERMISSION_DENIED) {
-          setError("Location permission denied. Allow it from browser settings.");
+          setError(
+            "Location permission denied. Allow it from browser settings.",
+          );
         } else if (err.code === err.POSITION_UNAVAILABLE) {
           setError("Location unavailable. Try again.");
         } else {
@@ -87,7 +114,9 @@ export default function GetLocation() {
     );
   };
 
-  if (!open) return null;
+  if (!open) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 z-50 bg-gray-600/60 backdrop-blur-sm flex items-center justify-center">
@@ -99,16 +128,24 @@ export default function GetLocation() {
           ✕
         </button>
 
-        <h2 className="text-lg md:text-xl font-semibold mb-4">Location Access</h2>
+        <h2 className="text-lg md:text-xl font-semibold mb-4">
+          Location Access
+        </h2>
 
         <p className="text-sm md:text-base mb-6 text-gray-300">
           Let us access your location to find people around you.
         </p>
 
-        {error && <p className="text-xs text-red-400 mb-4">{error}</p>}
+        {error && (
+          <p className="text-xs text-red-400 mb-4">
+            {error}
+          </p>
+        )}
 
         {loading ? (
-          <p className="text-xs text-gray-400">Checking location permission...</p>
+          <p className="text-xs text-gray-400">
+            Checking location permission...
+          </p>
         ) : (
           <button
             onClick={requestLocation}

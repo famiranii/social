@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 export default function BackwardBtn() {
   const router = useRouter()
   const backwardIconClicked=()=>{
-    router.push("/")
+    router.back()
   }
   return (
-    <button className="text-xl font-bold text-gray-900 rounded-full rotate-180 hover:bg-gray-300" onClick={backwardIconClicked}>
+    <button className="text-xl p-0.5 font-bold text-gray-900 rounded-full rotate-180 hover:bg-gray-400/10" onClick={backwardIconClicked}>
       <BackwardIcon prop={{ width: 40, height: 40 }} />
     </button>
   );

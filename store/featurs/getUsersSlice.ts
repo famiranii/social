@@ -148,6 +148,9 @@ const usersSlice = createSlice({
         ...state.images,
       ];
     },
+    removeUserById: (state, action: PayloadAction<number>) => {
+      state.users = state.users.filter((user) => user.id !== action.payload);
+    },
   },
 
   extraReducers: (builder) => {
@@ -262,7 +265,7 @@ const usersSlice = createSlice({
   },
 });
 
-export const { handleRemoveImage, handleAddImage, setSelectedCountry } =
+export const { handleRemoveImage, handleAddImage, setSelectedCountry , removeUserById } =
   usersSlice.actions;
 
 export default usersSlice.reducer;

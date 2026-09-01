@@ -158,6 +158,7 @@ export default function UserLocationMap({ users = [] }: { users: MapUser[] }) {
         width: "100%",
         height: "90vh",
         fontFamily: "Vazirmatn, Tahoma, sans-serif",
+        zIndex:5
       }}
     >
       <div ref={mapRef} style={{ width: "100%", height: "100%" }} />

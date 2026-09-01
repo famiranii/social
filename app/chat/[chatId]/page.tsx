@@ -16,6 +16,7 @@ import Loading from "@/app/components/Loading";
 import DrawerBtn from "../components/DrawerBtn";
 import ScrollToBottomBtn from "../components/ScrollToBottomBtn";
 import ReportModal from "../components/ReportModal";
+import { closeModal } from "@/store/featurs/uiSlice";
 
 export default function Page() {
   const router = useRouter();
@@ -29,8 +30,13 @@ export default function Page() {
   const status = useAppSelector((state) => state.chats.status);
   const dispatch = useAppDispatch();
   const userProfileClickHandler = () => {
-    router.push("/" + chatPerson?.conversation?.id);
+    router.push("/users/" + chatPerson?.conversation?.id);
   };
+  const [isAtBottom, setIsAtBottom] = useState(true);
+
+  useEffect(() => {
+    dispatch(closeModal("drawer"));
+  }, []);
 
   useEffect(() => {
     if (id && id != "new") {
@@ -68,11 +74,16 @@ export default function Page() {
     const container = messagesRef.current;
     if (!container || loadingMore) return;
 
-    const isNearBottom =
-      container.scrollHeight - container.scrollTop - container.clientHeight <
-      150;
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
 
-    if (isNearBottom) setHasNewMessage(false);
+    const isNearBottom = distanceFromBottom < 150;
+
+    setIsAtBottom(isNearBottom);
+
+    if (isNearBottom) {
+      setHasNewMessage(false);
+    }
 
     if (container.scrollTop <= 20) {
       setLoadingMore(true);
@@ -80,10 +91,12 @@ export default function Page() {
       const previousHeight = container.scrollHeight;
 
       const nextPage = page + 1;
+
       if (status === "endOfMessages") {
         setLoadingMore(false);
         return;
       }
+
       await dispatch(
         getCoversationApi({
           conv_id: Number(id),
@@ -97,8 +110,10 @@ export default function Page() {
         if (!messagesRef.current) return;
 
         const newHeight = messagesRef.current.scrollHeight;
+
         messagesRef.current.scrollTop += newHeight - previousHeight;
       });
+
       setHasNewMessage(false);
       setLoadingMore(false);
     }
@@ -120,27 +135,18 @@ export default function Page() {
     }
   }, [chatInfo.length]);
 
-  useEffect(() => {
-    const container = messagesRef.current;
-    if (!container) return;
-
-    const isNearBottom =
-      container.scrollHeight - container.scrollTop - container.clientHeight <
-      150;
-
-    if (isNearBottom) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    } else {
-      setHasNewMessage(true);
-    }
-  }, [chatInfo.length]);
-
   ///////////////////
 
   const scrollToBottom = () => {
-    if (messagesRef.current) {
-      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-    }
+    if (!messagesRef.current) return;
+
+    messagesRef.current.scrollTo({
+      top: messagesRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+
+    setIsAtBottom(true);
+    setHasNewMessage(false);
   };
 
   //// chat actions
@@ -186,8 +192,11 @@ export default function Page() {
             {/* <span className="absolute bottom-1 right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span> */}
           </div>
           <div>
-            <h2 className="font-semibold text-gray-900">
-              {chatPerson?.conversation?.username}
+            <h2
+              className="font-semibold text-gray-900"
+              onClick={userProfileClickHandler}
+            >
+              @{chatPerson?.conversation?.username}
             </h2>
             {/* <p className="text-sm text-green-500">Online</p> */}
           </div>
@@ -224,10 +233,12 @@ export default function Page() {
         </div>
       </div>
       {/* Input */}
-      <ScrollToBottomBtn
-        onScrollDown={scrollToBottom}
-        hasNewMessage={hasNewMessage}
-      />
+      {!isAtBottom && (
+        <ScrollToBottomBtn
+          onScrollDown={scrollToBottom}
+          hasNewMessage={hasNewMessage}
+        />
+      )}
       <SendMessageInput />
       {isOpenReportModal && (
         <ReportModal

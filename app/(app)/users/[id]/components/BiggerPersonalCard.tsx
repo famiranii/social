@@ -2,7 +2,8 @@ import { User } from "@/types/user";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import UserActions from "@/app/components/UserActions";
-import LogoutButton from "@/app/components/Logout";
+import { useAppSelector } from "@/store/hooks/redux";
+import { useParams } from "next/navigation";
 
 const AddPostBtn = dynamic(() => import("./AddPostBtn"), { ssr: false });
 
@@ -17,7 +18,9 @@ export default function BiggerPersonalCard({
 }) {
   const imgSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL ?? ""}${image}`;
   const pImgSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL ?? ""}${profileImage}`;
-
+  const reduxId = useAppSelector((state) => state.userInfo.userInfo.id);
+  const params = useParams();
+  const id = params.id;
   return (
     <div className="relative w-80 md:w-88 rounded-3xl overflow-hidden shadow-2xl bg-[#0d1117] border border-white/10 flex flex-col h-[600px]">
       {/* Cover photo */}
@@ -46,7 +49,7 @@ export default function BiggerPersonalCard({
             </div>
           )}
         </div>
-        <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-emerald-400 border-2 border-[#0d1117]" />
+        {/* <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-emerald-400 border-2 border-[#0d1117]" /> */}
       </div>
 
       {/* Body */}
@@ -95,9 +98,11 @@ export default function BiggerPersonalCard({
 
         <div className="w-full h-px bg-white/8 my-5" />
 
-        <div className="flex items-center gap-4">
-          <UserActions user={user} />
-        </div>
+        {reduxId.toString() !== id?.toString() && (
+          <div className="flex items-center gap-4">
+            <UserActions user={user} />
+          </div>
+        )}
 
         <div className="my-5 w-full">
           <AddPostBtn />

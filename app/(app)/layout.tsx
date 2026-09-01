@@ -13,7 +13,7 @@ export default function RootLayout({
       <ProtectedRoute>
         <HomeHeader />
         <GetLocation />
-        <main className="flex-1 overflow-hidden pt-18">{children}</main>
+        <main className="flex-1 overflow-hidden py-18">{children}</main>
       </ProtectedRoute>
     </div>
   );
