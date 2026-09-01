@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, CopyIcon } from "lucide-react";
+import Link from "next/link";
 
 type UserInfo = {
   id: number;
@@ -74,9 +75,11 @@ export default function InvitedUser({ users, id }: InvitedUserProps) {
           </div>
 
           {/* Invited Users */}
+
           {users.length > 0 ? (
             users.map((user) => (
-              <div
+              <Link
+                href={"/admin/users/" + user.id}
                 key={user.id}
                 className="flex items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] px-4 py-3 transition-colors hover:bg-white/[0.05]"
               >
@@ -95,7 +98,7 @@ export default function InvitedUser({ users, id }: InvitedUserProps) {
                     </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))
           ) : (
             <div className="py-8 text-center text-sm text-slate-500">

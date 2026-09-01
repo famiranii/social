@@ -79,7 +79,7 @@ export default function ReportModal({
           <p className="text-xs text-slate-500">Reported User</p>
 
           <p className="mt-1 text-sm font-medium text-white">
-            User #{reported_id}
+            User #{reported_username}
           </p>
         </div>
 
