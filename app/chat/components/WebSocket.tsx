@@ -7,15 +7,18 @@ import {
   deleteMessageWithWebsocket,
   seenMessageHandler,
 } from "@/store/featurs/chatSlice";
+import { addOnlineUser, removeOnlineUser } from "@/store/featurs/isOnlineUserSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/redux";
 import { Client } from "@stomp/stompjs";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 
 export default function WebSocket() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const person = useAppSelector((state) => state.userInfo.userInfo);
+  const onlineUsers = useAppSelector((state) => state.onlineUsers.onlineUsers);
+  const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   const params = useParams();
   const id = person?.id;
   const currentChatId = params.chatId;
@@ -28,15 +31,11 @@ export default function WebSocket() {
   const clientRef = useRef<Client | null>(null);
 
   useEffect(() => {
-    console.log("run websocket");
-    console.log(id);
     if (!id) return;
 
-    console.log("run websocket after id");
 
     const brokeL = process.env.NEXT_PUBLIC_STOMP_URL;
 
-    console.log(brokeL);
 
     const client = new Client({
       brokerURL: process.env.NEXT_PUBLIC_STOMP_URL,
@@ -69,13 +68,11 @@ export default function WebSocket() {
     console.log("3 websocket");
 
     client.onConnect = () => {
-      console.log("[STOMP] Connected successfully");
       client.subscribe("/exchange/events/user." + id, (message) => {
         const payload = JSON.parse(message.body);
         console.log("[STOMP] Received event:", payload.event, payload);
 
         if (payload.event === "message.created") {
-          console.log("[STOMP] message.created:", payload.data);
           const data = payload.data;
           dispatch(addToChatWithWbSocket(data));
           if (
@@ -86,8 +83,28 @@ export default function WebSocket() {
             dispatch(clearUnreadCount(data.conversation_id));
           }
         }
+
+        if (payload.event === "user.status") {
+          console.log("first")
+          console.log(payload.id)
+          const userId = payload.id
+
+
+          if (timers.current[userId]) {
+            clearTimeout(timers.current[userId]);
+          }
+
+          // کاربر رو به لیست آنلاین‌ها اضافه کن
+          dispatch(addOnlineUser(userId));
+
+          // اگر تا 20 ثانیه پیام جدید نیومد
+          timers.current[userId] = setTimeout(() => {
+            dispatch(removeOnlineUser(userId));
+
+            delete timers.current[userId];
+          }, 20_000);
+        }
         if (payload.event === "chat.created") {
-          console.log("[STOMP] chat.created:", payload.data);
           dispatch(addNewChatToChats(payload.data));
         } else if (payload.event === "message.read") {
           console.log("[STOMP] message.read:", payload.data);
@@ -98,7 +115,6 @@ export default function WebSocket() {
             }),
           );
         } else if (payload.event === "message.deleted") {
-          console.log("[STOMP] message.deleted:", payload.data);
           dispatch(
             deleteMessageWithWebsocket({
               id: payload.data.message_id,
@@ -106,7 +122,6 @@ export default function WebSocket() {
             }),
           );
         } else if (payload.event === "chat.deleted") {
-          console.log("[STOMP] chat.deleted:", payload.data);
           dispatch(deleteChatWithWebsocket(payload.data.conv_id));
           if (currentChatIdRef.current === payload.data.conv_id) {
             router.push("/chat");

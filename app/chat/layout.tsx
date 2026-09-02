@@ -14,6 +14,7 @@ import { getConversationsApi, setChatPerson } from "@/store/featurs/chatSlice";
 import { closeModal } from "@/store/featurs/uiSlice";
 import WebSocket from "./components/WebSocket";
 import CoverForDropdwons from "../components/CoverForDropdwons";
+import { api } from "../components/lib/api";
 
 function ChatLayoutContent({ children }: { children: React.ReactNode }) {
   const params = useParams();
@@ -62,6 +63,29 @@ function ChatLayoutContent({ children }: { children: React.ReactNode }) {
       }
     }
   }, [chats, chatId, id, dispatch, router]);
+
+  useEffect(() => {
+    if (chats.length === 0) {
+      return;
+    }
+    const setSatus = async () => {
+      try {
+        const response = await api.get("user/status");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    setSatus();
+
+    const interval = setInterval(() => {
+      setSatus();
+    }, 10000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [chats]);
 
   const filteredChats = chats.filter(
     (chat) =>

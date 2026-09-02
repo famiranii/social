@@ -13,7 +13,9 @@ export default function EllipsisDropdown({
   handleClicked: (option: string) => void;
 }) {
   const dispatch = useAppDispatch();
-  const isOpenCoverDropdown = useAppSelector(state=>state.ui.ishandleDropdownsOpen)
+  const isOpenCoverDropdown = useAppSelector(
+    (state) => state.ui.ishandleDropdownsOpen,
+  );
   const [open, setOpen] = useState(false);
 
   const optionClicked = (option: string) => {
@@ -31,7 +33,7 @@ export default function EllipsisDropdown({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setOpen(true);
+            setOpen(!open);
             dispatch(handleDropdownsOpen(true));
           }}
           className="text-black rounded-4xl p-2 hover:bg-gray-300"

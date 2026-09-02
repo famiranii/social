@@ -32,6 +32,12 @@ export default function Page() {
   const userProfileClickHandler = () => {
     router.push("/users/" + chatPerson?.conversation?.id);
   };
+  const isOnlineUsers = useAppSelector(
+    (state) => state.onlineUsers.onlineUsers,
+  );
+  const isOnline = isOnlineUsers.some(
+    (user) => user === chatPerson?.conversation.id,
+  );
   const [isAtBottom, setIsAtBottom] = useState(true);
 
   useEffect(() => {
@@ -189,7 +195,9 @@ export default function Page() {
                 {chatPerson?.conversation?.username[0]}
               </div>
             )}
-            {/* <span className="absolute bottom-1 right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span> */}
+            {isOnline && (
+              <span className="absolute bottom-1 right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
+            )}
           </div>
           <div>
             <h2

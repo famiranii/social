@@ -136,17 +136,12 @@ const usersSlice = createSlice({
     },
 
     handleAddImage: (state, action: PayloadAction<string>) => {
-      state.images = state.images.filter((img) => img.image !== action.payload);
-
-      state.images = [
-        {
-          id: 0,
-          user_id: 0,
-          image: action.payload,
-          profile: 2,
-        },
-        ...state.images,
-      ];
+      state.images.unshift({
+        id: 0,
+        user_id: 0,
+        image: action.payload,
+        profile: 2,
+      });
     },
     removeUserById: (state, action: PayloadAction<number>) => {
       state.users = state.users.filter((user) => user.id !== action.payload);
@@ -265,7 +260,11 @@ const usersSlice = createSlice({
   },
 });
 
-export const { handleRemoveImage, handleAddImage, setSelectedCountry , removeUserById } =
-  usersSlice.actions;
+export const {
+  handleRemoveImage,
+  handleAddImage,
+  setSelectedCountry,
+  removeUserById,
+} = usersSlice.actions;
 
 export default usersSlice.reducer;
